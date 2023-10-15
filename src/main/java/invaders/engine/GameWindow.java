@@ -7,6 +7,7 @@ import invaders.ConfigReader;
 import invaders.entities.EntityViewImpl;
 import invaders.entities.SpaceBackground;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.util.Duration;
 
 import invaders.entities.EntityView;
@@ -43,6 +44,22 @@ public class GameWindow {
 
         scene.setOnKeyPressed(keyboardInputHandler::handlePressed);
         scene.setOnKeyReleased(keyboardInputHandler::handleReleased);
+
+        /**Set up Undo Button**/
+        Button undoButton = new Button("Undo");
+        undoButton.setLayoutX(10);
+        undoButton.setLayoutY(10);
+        undoButton.setOnAction(e ->{
+            //implement Undo feature
+        });
+
+        /**Set up Cheat Button**/
+        Button cheatButton = new Button("Cheat");
+        cheatButton.setLayoutX(60);
+        cheatButton.setLayoutY(10);
+        cheatButton.setOnAction(e ->{
+            //implement Cheat feature
+        });
 
     }
 
