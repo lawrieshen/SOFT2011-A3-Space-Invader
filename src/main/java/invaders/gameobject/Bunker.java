@@ -1,6 +1,8 @@
 package invaders.gameobject;
 
 import invaders.engine.GameEngine;
+import invaders.memento.Cloneable;
+import invaders.memento.Memento;
 import invaders.physics.Collider;
 import invaders.physics.Vector2D;
 import invaders.rendering.Renderable;
@@ -8,7 +10,7 @@ import invaders.state.BunkerState;
 import invaders.state.GreenState;
 import javafx.scene.image.Image;
 
-public class Bunker implements GameObject, Renderable {
+public class Bunker implements GameObject, Renderable, Cloneable {
     private Vector2D position;
     private double width;
     private double height;
@@ -59,6 +61,11 @@ public class Bunker implements GameObject, Renderable {
 	}
 
     @Override
+    public boolean isColliding(Renderable col) {
+        return Renderable.super.isColliding(col);
+    }
+
+    @Override
     public String getRenderableObjectName() {
         return "Bunker";
     }
@@ -105,5 +112,15 @@ public class Bunker implements GameObject, Renderable {
 
     public void setState(BunkerState state) {
         this.state = state;
+    }
+
+    @Override
+    public Memento save() {
+        return null;
+    }
+
+    @Override
+    public void restore() {
+
     }
 }

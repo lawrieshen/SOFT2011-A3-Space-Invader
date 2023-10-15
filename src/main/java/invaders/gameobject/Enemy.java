@@ -4,6 +4,8 @@ import invaders.engine.GameEngine;
 import invaders.factory.EnemyProjectileFactory;
 import invaders.factory.Projectile;
 import invaders.factory.ProjectileFactory;
+import invaders.memento.Cloneable;
+import invaders.memento.Memento;
 import invaders.physics.Collider;
 import invaders.physics.Vector2D;
 import invaders.rendering.Renderable;
@@ -14,7 +16,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Enemy implements GameObject, Renderable {
+public class Enemy implements GameObject, Renderable, Cloneable {
     private Vector2D position;
     private int lives = 1;
     private Image image;
@@ -130,6 +132,11 @@ public class Enemy implements GameObject, Renderable {
     }
 
     @Override
+    public boolean isColliding(Renderable col) {
+        return Renderable.super.isColliding(col);
+    }
+
+    @Override
     public String getRenderableObjectName() {
         return "Enemy";
     }
@@ -143,4 +150,13 @@ public class Enemy implements GameObject, Renderable {
         this.projectileStrategy = projectileStrategy;
     }
 
+    @Override
+    public Memento save() {
+        return null;
+    }
+
+    @Override
+    public void restore() {
+
+    }
 }

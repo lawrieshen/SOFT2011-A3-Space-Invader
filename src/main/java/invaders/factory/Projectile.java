@@ -1,12 +1,14 @@
 package invaders.factory;
 
 import invaders.gameobject.GameObject;
+import invaders.memento.Cloneable;
 import invaders.physics.Collider;
 import invaders.physics.Vector2D;
 import invaders.rendering.Renderable;
+import invaders.memento.Cloneable;
 import javafx.scene.image.Image;
 
-public abstract class Projectile implements Renderable, GameObject {
+public abstract class Projectile implements Renderable, GameObject, Cloneable {
     private int lives = 1;
     private Vector2D position;
     private final Image image;

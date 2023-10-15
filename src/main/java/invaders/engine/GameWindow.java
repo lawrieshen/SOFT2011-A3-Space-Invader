@@ -49,17 +49,19 @@ public class GameWindow {
         Button undoButton = new Button("Undo");
         undoButton.setLayoutX(10);
         undoButton.setLayoutY(10);
+        undoButton.setFocusTraversable(false);
         undoButton.setOnAction(e ->{
             //implement Undo feature
         });
-
         /**Set up Cheat Button**/
         Button cheatButton = new Button("Cheat");
-        cheatButton.setLayoutX(60);
+        cheatButton.setLayoutX(70);
         cheatButton.setLayoutY(10);
+        cheatButton.setFocusTraversable(false);
         cheatButton.setOnAction(e ->{
             //implement Cheat feature
         });
+        pane.getChildren().addAll(undoButton,cheatButton);
 
     }
 
