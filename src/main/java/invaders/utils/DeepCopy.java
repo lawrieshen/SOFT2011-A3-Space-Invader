@@ -3,35 +3,29 @@ package invaders.utils;
 import java.io.*;
 
 public class DeepCopy {
-//    public static void deepCopy(){
-//        ByteArrayOutputStream bos = null;
-//        ObjectOutputStream oos = null;
-//        ByteArrayInputStream bis = null;
-//        ObjectInputStream ois = null;
-//
-//        try{
-//            //Serialization
-//            bos = new ByteArrayOutputStream();
-//            oos = new ObjectOutputStream(bos);
-//            oos.writeObject(this);
-//            oos.flush();
-//            oos.close();
-//
-//            //Deserialization
-//            bis = new ByteArrayInputStream(bos.toByteArray());
-//            ois = new ObjectInputStream(bis);
-//            Ball copyObj = (Ball) ois.readObject();
-//
-//            return copyObj;
-//
-//        } catch (IOException e) {
-//            // Handle I/O-related exceptions, such as file I/O errors.
-//            e.printStackTrace();
-//            return null;
-//        } catch (ClassNotFoundException e) {
-//            // Handle the case where the class of the object being deserialized is not found.
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
+    static ByteArrayOutputStream bos = null;
+    static ObjectOutputStream oos = null;
+    static ByteArrayInputStream bis = null;
+    static ObjectInputStream ois = null;
+
+    public static <T> T deepCopy(T original, Class<T> type){
+        try{
+            //Serialize the original object
+            bos = new ByteArrayOutputStream();
+            oos = new ObjectOutputStream(bos);
+            oos.writeObject(original);
+            oos.close();
+
+            //Deserialize
+            bis = new ByteArrayInputStream(bos.toByteArray());
+            ois  = new ObjectInputStream(bis);
+            T copy = (T) ois.readObject();
+            ois.close();
+
+            return copy;
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException("Deep copy failed: " + e.getMessage());
+        }
+    }
+
 }

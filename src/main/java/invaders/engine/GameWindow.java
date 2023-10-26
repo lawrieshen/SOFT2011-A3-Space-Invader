@@ -1,5 +1,6 @@
 package invaders.engine;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -21,7 +22,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import org.json.simple.JSONObject;
 
-public class GameWindow implements Cloneable {
+public class GameWindow implements Serializable {
 	private final int width;
     private final int height;
 	private Scene scene;
@@ -66,17 +67,6 @@ public class GameWindow implements Cloneable {
         });
 
         pane.getChildren().addAll(undoButton,cheatButton);
-
-//        /**Set up Difficulty Level Menu**/
-//        Menu difficultyMenu = DifficultyLevelMenu.createDifficultyMenu(model);
-//        MenuBar menuBar = new MenuBar();
-//        menuBar.getMenus().add(difficultyMenu);
-//        VBox layoutForDLM = new VBox();
-//        layoutForDLM.getChildren().addAll(menuBar, pane);
-//        scene = new Scene(layoutForDLM, width, height);
-        scene.setOnKeyPressed(keyboardInputHandler::handlePressed);
-        scene.setOnKeyReleased(keyboardInputHandler::handleReleased);
-
 
     }
 

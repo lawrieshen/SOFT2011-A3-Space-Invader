@@ -195,4 +195,8 @@ public class GameEngine {
 	public Player getPlayer() {
 		return player;
 	}
+
+	public void setGameDifficulty(String path) {
+
+	}
 }

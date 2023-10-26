@@ -2,25 +2,17 @@ package invaders.engine;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.stage.Stage;
 
 public class DifficultyLevelMenu {
+    private DifficultyLevelMenuWindow difficultyLevelMenuWindow;
 
-//    private final int width;
-//    private final int height;
-//    private Scene scene;
-//    private Pane pane;
-//    private GameEngine model;
-//    private Renderable background;
-//
-//    private double xViewportOffset = 0.0;
-//    private double yViewportOffset = 0.0;
-//    // private static final double VIEWPORT_MARGIN = 280.0;
-//
-//    public DifficultyLevelMenu(GameEngine model){
-//
-//    }
+    public DifficultyLevelMenu(DifficultyLevelMenuWindow difficultyLevelMenuWindow){
+        this.difficultyLevelMenuWindow = difficultyLevelMenuWindow;
+    };
 
-    public static Menu createDifficultyMenu(GameEngine model) {
+    public Menu createDifficultyMenu() {
+
         Menu difficultyMenu = new Menu("Difficulty");
 
         MenuItem easyMenuItem = new MenuItem("Easy");
@@ -29,21 +21,31 @@ public class DifficultyLevelMenu {
 
         easyMenuItem.setOnAction(e -> {
             // Set the game difficulty to easy
-            //model.setGameDifficulty("config_easy.json");
+            GameEngine model = new GameEngine("src/main/resources/config_easy.json");
+            GameWindow window = new GameWindow(model);
+
+            difficultyLevelMenuWindow.switchToGameWindow(model, window);
         });
 
         normalMenuItem.setOnAction(e -> {
             // Set the game difficulty to normal
-            //model.setGameDifficulty("config_medium.json");
+            GameEngine model = new GameEngine("src/main/resources/config_medium.json");
+            GameWindow window = new GameWindow(model);
+
+            difficultyLevelMenuWindow.switchToGameWindow(model, window);
         });
 
         hardMenuItem.setOnAction(e -> {
             // Set the game difficulty to hard
-            //model.setGameDifficulty("config_hard.json");
+            GameEngine model = new GameEngine("src/main/resources/config_hard.json");
+            GameWindow window = new GameWindow(model);
+
+            difficultyLevelMenuWindow.switchToGameWindow(model, window);
         });
 
         difficultyMenu.getItems().addAll(easyMenuItem, normalMenuItem, hardMenuItem);
         return difficultyMenu;
     }
+
 }
 

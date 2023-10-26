@@ -1,5 +1,6 @@
 package invaders;
 
+import invaders.engine.DifficultyLevelMenuWindow;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import invaders.engine.GameEngine;
@@ -15,14 +16,15 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        GameEngine model = new GameEngine("src/main/resources/config_easy.json");
-        GameWindow window = new GameWindow(model);
-        window.run();
+        //GameEngine model = new GameEngine("src/main/resources/config_easy.json");
+        //GameWindow window = new GameWindow(model);
+        //window.run();
+        DifficultyLevelMenuWindow difficultyLevelWindow = DifficultyLevelMenuWindow.getInstance(primaryStage);
 
         primaryStage.setTitle("Space Invaders");
-        primaryStage.setScene(window.getScene());
+        primaryStage.setScene(difficultyLevelWindow.getScene());
         primaryStage.show();
 
-        window.run();
+        //window.run();
     }
 }
