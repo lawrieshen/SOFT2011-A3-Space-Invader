@@ -15,8 +15,6 @@ import javafx.util.Duration;
 
 public class DifficultyLevelMenuWindow {
     private Stage primaryStage;
-    private GameEngine model;
-    private GameWindow window;
     private final int width;
     private final int height;
     private Scene scene;
@@ -56,8 +54,6 @@ public class DifficultyLevelMenuWindow {
     }
 
     public void switchToGameWindow(GameEngine model, GameWindow window){
-        this.model = model;
-        this.window = window;
         window.run();
 
         primaryStage.setScene(window.getScene());
