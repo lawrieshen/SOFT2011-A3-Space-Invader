@@ -8,6 +8,9 @@ import invaders.entities.EntityViewImpl;
 import invaders.entities.SpaceBackground;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 import invaders.entities.EntityView;
@@ -18,7 +21,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import org.json.simple.JSONObject;
 
-public class GameWindow {
+public class GameWindow implements Cloneable {
 	private final int width;
     private final int height;
 	private Scene scene;
@@ -61,7 +64,19 @@ public class GameWindow {
         cheatButton.setOnAction(e ->{
             //implement Cheat feature
         });
+
         pane.getChildren().addAll(undoButton,cheatButton);
+
+//        /**Set up Difficulty Level Menu**/
+//        Menu difficultyMenu = DifficultyLevelMenu.createDifficultyMenu(model);
+//        MenuBar menuBar = new MenuBar();
+//        menuBar.getMenus().add(difficultyMenu);
+//        VBox layoutForDLM = new VBox();
+//        layoutForDLM.getChildren().addAll(menuBar, pane);
+//        scene = new Scene(layoutForDLM, width, height);
+        scene.setOnKeyPressed(keyboardInputHandler::handlePressed);
+        scene.setOnKeyReleased(keyboardInputHandler::handleReleased);
+
 
     }
 
