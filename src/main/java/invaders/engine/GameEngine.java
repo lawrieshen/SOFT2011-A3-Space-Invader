@@ -109,9 +109,25 @@ public class GameEngine {
 						renderableA.takeDamage(1);
 						renderableB.takeDamage(1);
 						/**Gain Score Here**/
-						if (renderableA.getHealth()<=0){
-							gameScore.setGameScore(gameScore.getGameScore()+1);
-							gameScore.notifyObservers();
+						if (renderableA.getHealth()<=0) {
+							if (renderableA.getClass().equals(EnemyProjectile.class)) {
+								if (((EnemyProjectile) renderableA).getStrategy().getClass().equals(SlowProjectileStrategy.class)) {
+									gameScore.setGameScore(gameScore.getGameScore() + 1);
+									gameScore.notifyObservers();
+								} else if (((EnemyProjectile) renderableA).getStrategy().getClass().equals(FastProjectileStrategy.class)) {
+									gameScore.setGameScore(gameScore.getGameScore() + 2);
+									gameScore.notifyObservers();
+								}
+							}
+							if (renderableA.getClass().equals(Enemy.class)) {
+								if (((Enemy) renderableA).getProjectileStrategy().getClass().equals(SlowProjectileStrategy.class)){
+									gameScore.setGameScore(gameScore.getGameScore() + 3);
+									gameScore.notifyObservers();
+								} else if (((Enemy) renderableA).getProjectileStrategy().getClass().equals(FastProjectileStrategy.class)){
+									gameScore.setGameScore(gameScore.getGameScore() + 4);
+									gameScore.notifyObservers();
+								}
+							}
 						}
 					}
 				}
