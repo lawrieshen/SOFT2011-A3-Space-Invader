@@ -8,6 +8,8 @@ import invaders.ConfigReader;
 import invaders.entities.EntityViewImpl;
 import invaders.entities.SpaceBackground;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.util.Duration;
@@ -37,6 +39,9 @@ public class GameWindow implements Serializable {
     private Label gameTimeLabel;
     /**Set Up Game Score Label**/
     private Label gameScoreLabel;
+    /**Set Up Undo Button and Cheat Menu Bar**/
+    private Button undoButton;
+    private MenuBar cheatMenuBar;
 
 	public GameWindow(GameEngine model){
         this.model = model;
@@ -52,26 +57,25 @@ public class GameWindow implements Serializable {
         scene.setOnKeyPressed(keyboardInputHandler::handlePressed);
         scene.setOnKeyReleased(keyboardInputHandler::handleReleased);
 
-        /**Set up Undo Button**/
-        Button undoButton = new Button("Undo");
-        undoButton.setLayoutX(10);
-        undoButton.setLayoutY(10);
-        undoButton.setFocusTraversable(false);
-        undoButton.setOnAction(e ->{
-            //implement Undo feature
-        });
-        /**Set up Cheat Button**/
-        Button cheatButton = new Button("Cheat");
-        cheatButton.setLayoutX(70);
-        cheatButton.setLayoutY(10);
-        cheatButton.setFocusTraversable(false);
-        cheatButton.setOnAction(e ->{
-            //implement Cheat feature
-        });
-
-        pane.getChildren().addAll(undoButton,cheatButton);
-
-        /**Set up Game Time Label**/
+//        /**Set up Undo Button**/
+//        Button undoButton = new Button("Undo");
+//        undoButton.setLayoutX(10);
+//        undoButton.setLayoutY(10);
+//        undoButton.setFocusTraversable(false);
+//        undoButton.setOnAction(e ->{
+//            //implement Undo feature
+//        });
+//        /**Set up Cheat Button**/
+//        Button cheatButton = new Button("Cheat");
+//        cheatButton.setLayoutX(70);
+//        cheatButton.setLayoutY(10);
+//        cheatButton.setFocusTraversable(false);
+//        cheatButton.setOnAction(e ->{
+//            //implement Cheat feature
+//        });
+//
+//        pane.getChildren().addAll(undoButton, cheatButton);
+        /**Set Up Game Time Label**/
         gameTimeLabel = new Label("Time: 0:00");
         gameTimeLabel.setLayoutX(10);
         gameTimeLabel.setLayoutY(40);
@@ -84,6 +88,27 @@ public class GameWindow implements Serializable {
         gameScoreLabel.setLayoutY(60);
         gameScoreLabel.setTextFill(Paint.valueOf("WHITE"));
         pane.getChildren().add(gameScoreLabel);
+
+        /**Set Up Undo and Cheat Menu**/
+        cheatMenuBar = new MenuBar();
+        undoButton = new Button("Undo");
+        Menu cheatMenu = new Menu("Cheat");
+        MenuItem removeAllSlowAliens = new MenuItem("Remove All Slow Aliens");
+        MenuItem removeAllFastAliens = new MenuItem("Remove All Fast Aliens");
+        MenuItem removeALlSlowProjectiles = new MenuItem("Remove All Slow Projectiles");
+        MenuItem removeALlFastProjectiles = new MenuItem("Remove All Fast Projectiles");
+        cheatMenu.getItems().addAll(removeAllSlowAliens,removeAllFastAliens,removeALlSlowProjectiles,removeALlFastProjectiles);
+        cheatMenuBar.getMenus().add(cheatMenu);
+
+        HBox hbox = new HBox(undoButton, cheatMenuBar);
+
+        HBox.setHgrow(cheatMenuBar, Priority.NEVER);
+        HBox.setHgrow(undoButton, Priority.NEVER);
+        hbox.setSpacing(10);
+        hbox.setLayoutX(10);
+        hbox.setLayoutY(10);
+
+        pane.getChildren().add(hbox);
 
     }
 
