@@ -35,6 +35,8 @@ public class GameWindow implements Serializable {
 
     /**Set up Game Time Label**/
     private Label gameTimeLabel;
+    /**Set Up Game Score Label**/
+    private Label gameScoreLabel;
 
 	public GameWindow(GameEngine model){
         this.model = model;
@@ -75,6 +77,13 @@ public class GameWindow implements Serializable {
         gameTimeLabel.setLayoutY(40);
         gameTimeLabel.setTextFill(Paint.valueOf("WHITE"));
         pane.getChildren().add(gameTimeLabel);
+
+        /**Set Up Game Score Label**/
+        gameScoreLabel = new Label("Score: 0");
+        gameScoreLabel.setLayoutX(10);
+        gameScoreLabel.setLayoutY(60);
+        gameScoreLabel.setTextFill(Paint.valueOf("WHITE"));
+        pane.getChildren().add(gameScoreLabel);
 
     }
 
@@ -142,6 +151,12 @@ public class GameWindow implements Serializable {
 
         String formattedTime  = String.format("Time: %02.0f:%02.0f", minutes, seconds);
         gameTimeLabel.setText(formattedTime);
+
+        /**Draw Score Recorder DYNAMICALLY**/
+        int score = model.getSystemStats().getGameScore();
+
+        String formattedScore = String.format("Score: %d", score);
+        gameScoreLabel.setText(formattedScore);
     }
 
 	public Scene getScene() {

@@ -15,6 +15,8 @@ public class EnemyProjectile extends Projectile{
         this.strategy = strategy;
     }
 
+    public ProjectileStrategy getStrategy(){return strategy;}
+
     @Override
     public void update(GameEngine model) {
         strategy.update(this);

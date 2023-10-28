@@ -7,14 +7,18 @@ import invaders.ConfigReader;
 import invaders.builder.BunkerBuilder;
 import invaders.builder.Director;
 import invaders.builder.EnemyBuilder;
+import invaders.factory.EnemyProjectile;
 import invaders.factory.Projectile;
 import invaders.gameobject.Bunker;
 import invaders.gameobject.Enemy;
 import invaders.gameobject.GameObject;
 import invaders.entities.Player;
+import invaders.observer.GameScore;
 import invaders.observer.SystemStats;
 import invaders.observer.GameTime;
 import invaders.rendering.Renderable;
+import invaders.strategy.FastProjectileStrategy;
+import invaders.strategy.SlowProjectileStrategy;
 import javafx.util.Duration;
 import org.json.simple.JSONObject;
 
@@ -39,7 +43,8 @@ public class GameEngine {
 	private int gameHeight;
 	private int timer = 45;
 	private GameTime gameTime = new GameTime();
-	private SystemStats systemStats = new SystemStats(gameTime);
+	private GameScore gameScore = new GameScore();
+	private SystemStats systemStats = new SystemStats(gameTime, gameScore);
 
 	public GameEngine(String config){
 		// Read the config here
@@ -75,6 +80,7 @@ public class GameEngine {
 		/**Observer**/
 		//register
 		gameTime.attach(systemStats);
+		gameScore.attach(systemStats);
 	}
 
 	/**
@@ -97,10 +103,16 @@ public class GameEngine {
 				if((renderableA.getRenderableObjectName().equals("Enemy") && renderableB.getRenderableObjectName().equals("EnemyProjectile"))
 						||(renderableA.getRenderableObjectName().equals("EnemyProjectile") && renderableB.getRenderableObjectName().equals("Enemy"))||
 						(renderableA.getRenderableObjectName().equals("EnemyProjectile") && renderableB.getRenderableObjectName().equals("EnemyProjectile"))){
+					//do nothing
 				}else{
 					if(renderableA.isColliding(renderableB) && (renderableA.getHealth()>0 && renderableB.getHealth()>0)) {
 						renderableA.takeDamage(1);
 						renderableB.takeDamage(1);
+						/**Gain Score Here**/
+						if (renderableA.getHealth()<=0){
+							gameScore.setGameScore(gameScore.getGameScore()+1);
+							gameScore.notifyObservers();
+						}
 					}
 				}
 			}
@@ -133,6 +145,9 @@ public class GameEngine {
 		/**record game time**/
 		gameTime.setTime(gameTime.getGameTime().add(new Duration(17)));
 		gameTime.notifyObservers();
+
+		/**record game score**/
+		handleProjectileCollisions();
 
 	}
 
@@ -209,4 +224,26 @@ public class GameEngine {
 	}
 
 	public SystemStats getSystemStats(){return systemStats;}
+	public GameScore getGameScore(){return gameScore;}
+	public GameTime getGameTime(){return  gameTime;}
+
+	public void handleProjectileCollisions() {
+//		for (int i = 0; i < renderables.size(); i++) {
+//			Renderable renderableA = renderables.get(i);
+//			for (int j = i+1; j < renderables.size(); j++) {
+//				Renderable renderableB = renderables.get(j);
+//
+//				if((renderableA.getRenderableObjectName().equals("PlayerProjectile") && renderableB.getRenderableObjectName().equals("EnemyProjectile"))
+//						||(renderableA.getRenderableObjectName().equals("EnemyProjectile") && renderableB.getRenderableObjectName().equals("PlayerProjectile"))){
+//					if (!renderableA.isAlive()){
+//						gameScore.setGameScore(gameScore.getGameScore()+1);
+//						gameScore.notifyObservers();
+//					}
+//				}
+//			}
+//		}
+
+
+	}
+
 }

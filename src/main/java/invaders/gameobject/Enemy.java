@@ -6,10 +6,14 @@ import invaders.factory.Projectile;
 import invaders.factory.ProjectileFactory;
 import invaders.memento.Cloneable;
 import invaders.memento.Memento;
+import invaders.observer.GameScore;
+import invaders.observer.SystemStats;
 import invaders.physics.Collider;
 import invaders.physics.Vector2D;
 import invaders.rendering.Renderable;
+import invaders.strategy.FastProjectileStrategy;
 import invaders.strategy.ProjectileStrategy;
+import invaders.strategy.SlowProjectileStrategy;
 import javafx.scene.image.Image;
 
 import java.io.File;
@@ -148,6 +152,10 @@ public class Enemy implements GameObject, Renderable, Cloneable {
 
     public void setProjectileStrategy(ProjectileStrategy projectileStrategy) {
         this.projectileStrategy = projectileStrategy;
+    }
+
+    public ProjectileStrategy getProjectileStrategy() {
+        return projectileStrategy;
     }
 
     @Override
