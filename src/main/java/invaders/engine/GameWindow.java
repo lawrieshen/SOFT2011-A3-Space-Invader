@@ -7,11 +7,9 @@ import java.util.ArrayList;
 import invaders.ConfigReader;
 import invaders.entities.EntityViewImpl;
 import invaders.entities.SpaceBackground;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.util.Duration;
 
 import invaders.entities.EntityView;
@@ -34,6 +32,9 @@ public class GameWindow implements Serializable {
     private double xViewportOffset = 0.0;
     private double yViewportOffset = 0.0;
     // private static final double VIEWPORT_MARGIN = 280.0;
+
+    /**Set up Game Time Label**/
+    private Label gameTimeLabel;
 
 	public GameWindow(GameEngine model){
         this.model = model;
@@ -67,6 +68,13 @@ public class GameWindow implements Serializable {
         });
 
         pane.getChildren().addAll(undoButton,cheatButton);
+
+        /**Set up Game Time Label**/
+        gameTimeLabel = new Label("Time: 0:00");
+        gameTimeLabel.setLayoutX(10);
+        gameTimeLabel.setLayoutY(40);
+        gameTimeLabel.setTextFill(Paint.valueOf("WHITE"));
+        pane.getChildren().add(gameTimeLabel);
 
     }
 
@@ -127,6 +135,13 @@ public class GameWindow implements Serializable {
 
         entityViews.removeIf(EntityView::isMarkedForDelete);
 
+
+        /**Draw Duration of Game DYNAMICALLY**/
+        long minutes = (long) model.getSystemStats().getGameTime().toMinutes();
+        long seconds = (long) (model.getSystemStats().getGameTime().toSeconds()%60);
+
+        String formattedTime  = String.format("Time: %02d:%02d", minutes, seconds);
+        gameTimeLabel.setText(formattedTime);
     }
 
 	public Scene getScene() {
