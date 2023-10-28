@@ -137,10 +137,10 @@ public class GameWindow implements Serializable {
 
 
         /**Draw Duration of Game DYNAMICALLY**/
-        long minutes = (long) model.getSystemStats().getGameTime().toMinutes();
-        long seconds = (long) (model.getSystemStats().getGameTime().toSeconds()%60);
+        double minutes = (double) model.getSystemStats().getGameTime().toMinutes();
+        double seconds = (double) (model.getSystemStats().getGameTime().toSeconds()%60);
 
-        String formattedTime  = String.format("Time: %02d:%02d", minutes, seconds);
+        String formattedTime  = String.format("Time: %02.0f:%02.0f", minutes, seconds);
         gameTimeLabel.setText(formattedTime);
     }
 
