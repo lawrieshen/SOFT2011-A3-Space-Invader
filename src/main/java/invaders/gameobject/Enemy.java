@@ -4,23 +4,15 @@ import invaders.engine.GameEngine;
 import invaders.factory.EnemyProjectileFactory;
 import invaders.factory.Projectile;
 import invaders.factory.ProjectileFactory;
-import invaders.memento.Cloneable;
-import invaders.memento.Memento;
-import invaders.observer.GameScore;
-import invaders.observer.SystemStats;
-import invaders.physics.Collider;
 import invaders.physics.Vector2D;
 import invaders.rendering.Renderable;
-import invaders.strategy.FastProjectileStrategy;
 import invaders.strategy.ProjectileStrategy;
-import invaders.strategy.SlowProjectileStrategy;
 import javafx.scene.image.Image;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Enemy implements GameObject, Renderable, Cloneable {
+public class Enemy implements GameObject, Renderable {
     private Vector2D position;
     private int lives = 1;
     private Image image;
@@ -158,13 +150,4 @@ public class Enemy implements GameObject, Renderable, Cloneable {
         return projectileStrategy;
     }
 
-    @Override
-    public Memento save() {
-        return null;
-    }
-
-    @Override
-    public void restore() {
-
-    }
 }

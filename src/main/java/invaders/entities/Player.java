@@ -1,16 +1,11 @@
 package invaders.entities;
 
-import invaders.factory.PlayerProjectile;
 import invaders.factory.PlayerProjectileFactory;
 import invaders.factory.Projectile;
 import invaders.factory.ProjectileFactory;
-import invaders.memento.Memento;
-import invaders.physics.Collider;
 import invaders.physics.Moveable;
 import invaders.physics.Vector2D;
-import invaders.rendering.Animator;
 import invaders.rendering.Renderable;
-import invaders.memento.Cloneable;
 
 import invaders.strategy.NormalProjectileStrategy;
 import javafx.scene.image.Image;
@@ -18,7 +13,7 @@ import org.json.simple.JSONObject;
 
 import java.io.File;
 
-public class Player implements Moveable, Renderable, Cloneable {
+public class Player implements Moveable, Renderable, Cloneable{
 
     private final Vector2D position;
     private double health;
@@ -110,13 +105,4 @@ public class Player implements Moveable, Renderable, Cloneable {
         return "Player";
     }
 
-    @Override
-    public Memento save() {
-        return null;
-    }
-
-    @Override
-    public void restore() {
-
-    }
 }

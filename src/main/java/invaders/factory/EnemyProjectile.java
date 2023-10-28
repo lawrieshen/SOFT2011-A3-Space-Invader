@@ -1,8 +1,6 @@
 package invaders.factory;
 
 import invaders.engine.GameEngine;
-import invaders.memento.Memento;
-import invaders.physics.Collider;
 import invaders.physics.Vector2D;
 import invaders.strategy.ProjectileStrategy;
 import javafx.scene.image.Image;
@@ -29,15 +27,5 @@ public class EnemyProjectile extends Projectile{
     @Override
     public String getRenderableObjectName() {
         return "EnemyProjectile";
-    }
-
-    @Override
-    public Memento save() {
-        return null;
-    }
-
-    @Override
-    public void restore() {
-
     }
 }

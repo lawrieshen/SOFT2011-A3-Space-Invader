@@ -100,6 +100,9 @@ public class GameWindow implements Serializable {
         cheatMenu.getItems().addAll(removeAllSlowAliens,removeAllFastAliens,removeALlSlowProjectiles,removeALlFastProjectiles);
         cheatMenuBar.getMenus().add(cheatMenu);
 
+        undoButton.setFocusTraversable(false);
+        cheatMenuBar.setFocusTraversable(false);
+
         HBox hbox = new HBox(undoButton, cheatMenuBar);
 
         HBox.setHgrow(cheatMenuBar, Priority.NEVER);
@@ -107,6 +110,7 @@ public class GameWindow implements Serializable {
         hbox.setSpacing(10);
         hbox.setLayoutX(10);
         hbox.setLayoutY(10);
+        hbox.setFocusTraversable(false);
 
         pane.getChildren().add(hbox);
 

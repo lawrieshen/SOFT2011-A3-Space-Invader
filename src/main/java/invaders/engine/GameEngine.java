@@ -13,6 +13,7 @@ import invaders.gameobject.Bunker;
 import invaders.gameobject.Enemy;
 import invaders.gameobject.GameObject;
 import invaders.entities.Player;
+import invaders.memento.GameEngineMemento;
 import invaders.observer.GameScore;
 import invaders.observer.SystemStats;
 import invaders.observer.GameTime;
@@ -162,8 +163,6 @@ public class GameEngine {
 		gameTime.setTime(gameTime.getGameTime().add(new Duration(17)));
 		gameTime.notifyObservers();
 
-		/**record game score**/
-		handleProjectileCollisions();
 
 	}
 
@@ -243,23 +242,42 @@ public class GameEngine {
 	public GameScore getGameScore(){return gameScore;}
 	public GameTime getGameTime(){return  gameTime;}
 
-	public void handleProjectileCollisions() {
-//		for (int i = 0; i < renderables.size(); i++) {
-//			Renderable renderableA = renderables.get(i);
-//			for (int j = i+1; j < renderables.size(); j++) {
-//				Renderable renderableB = renderables.get(j);
-//
-//				if((renderableA.getRenderableObjectName().equals("PlayerProjectile") && renderableB.getRenderableObjectName().equals("EnemyProjectile"))
-//						||(renderableA.getRenderableObjectName().equals("EnemyProjectile") && renderableB.getRenderableObjectName().equals("PlayerProjectile"))){
-//					if (!renderableA.isAlive()){
-//						gameScore.setGameScore(gameScore.getGameScore()+1);
-//						gameScore.notifyObservers();
-//					}
-//				}
-//			}
-//		}
+	/**Implement Memento for Undo**/
+	public GameEngineMemento save(){
+		return new GameEngineMemento(
+				new ArrayList<>(gameObjects),
+				new ArrayList<>(pendingToAddGameObject),
+				new ArrayList<>(pendingToRemoveGameObject),
+				new ArrayList<>(pendingToAddRenderable),
+				new ArrayList<>(pendingToRemoveRenderable),
+				new ArrayList<>(renderables),
+				player,
+				left,
+				right,
+				gameWidth,
+				gameHeight,
+				timer,
+				gameTime,
+				gameScore,
+				systemStats
+		);
+	}
 
-
+	public void restore(GameEngineMemento gameEngineMemento){
+		this.gameObjects = new ArrayList<>(gameEngineMemento.getGameObjects());
+		this.pendingToAddGameObject = new ArrayList<>(gameEngineMemento.getPendingToAddGameObject());
+		this.pendingToRemoveGameObject = new ArrayList<>(gameEngineMemento.getPendingToRemoveGameObject());
+		this.pendingToAddRenderable = new ArrayList<>(gameEngineMemento.getPendingToAddRenderable());
+		this.pendingToRemoveRenderable = new ArrayList<>(gameEngineMemento.getPendingToRemoveRenderable());
+		this.player = gameEngineMemento.getPlayer();
+		this.left = gameEngineMemento.isLeft();
+		this.right = gameEngineMemento.isRight();
+		this.gameWidth = gameEngineMemento.getGameWidth();
+		this.gameHeight = gameEngineMemento.getGameHeight();
+		this.timer = gameEngineMemento.getTimer();
+		this.gameTime = gameEngineMemento.getGameTime();
+		this.gameScore = gameEngineMemento.getGameScore();
+		this.systemStats = gameEngineMemento.getSystemStats();
 	}
 
 }
