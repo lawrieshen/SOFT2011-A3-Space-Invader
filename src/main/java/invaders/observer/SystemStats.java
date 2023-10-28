@@ -1,46 +1,24 @@
 package invaders.observer;
 
-public class SystemStats implements Subject{
-    private double time;
+import javafx.util.Duration;
+
+public class SystemStats implements Observer{
+    //Observer States
+    private Duration time;
     private int score;
+    //declare subject
+    private GameTime gameTime;
 
-    public SystemStats(){
-        time = 0;
-        score = 0;
+    public SystemStats(GameTime gameTime){
+        this.gameTime = gameTime;
     }
+
+    public Duration getGameTime(){return time;}
 
     @Override
-    public double getTime(){
-        return time;
+    public void update() {
+        time = gameTime.getGameTime();
+        //System.out.println(time.toSeconds());
     }
 
-    @Override
-    public int getScore(){
-        return score;
-    }
-
-    @Override
-    public void attach(Observer observer) {
-
-    }
-
-    @Override
-    public void detach(Observer observer) {
-
-    }
-
-    @Override
-    public void notifyObservers() {
-
-    }
-
-    @Override
-    public void increaseTime() {
-
-    }
-
-    @Override
-    public void increaseScore() {
-
-    }
 }

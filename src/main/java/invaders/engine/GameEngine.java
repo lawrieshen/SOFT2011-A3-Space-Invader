@@ -12,7 +12,10 @@ import invaders.gameobject.Bunker;
 import invaders.gameobject.Enemy;
 import invaders.gameobject.GameObject;
 import invaders.entities.Player;
+import invaders.observer.SystemStats;
+import invaders.observer.GameTime;
 import invaders.rendering.Renderable;
+import javafx.util.Duration;
 import org.json.simple.JSONObject;
 
 /**
@@ -35,6 +38,8 @@ public class GameEngine {
 	private int gameWidth;
 	private int gameHeight;
 	private int timer = 45;
+	private GameTime gameTime = new GameTime();
+	private SystemStats systemStats = new SystemStats(gameTime);
 
 	public GameEngine(String config){
 		// Read the config here
@@ -67,6 +72,9 @@ public class GameEngine {
 			renderables.add(enemy);
 		}
 
+		/**Observer**/
+		//register
+		gameTime.attach(systemStats);
 	}
 
 	/**
@@ -121,6 +129,10 @@ public class GameEngine {
 				ro.getPosition().setY(offset);
 			}
 		}
+
+		/**record game time**/
+		gameTime.setTime(gameTime.getGameTime().add(new Duration(17)));
+		gameTime.notifyObservers();
 
 	}
 
@@ -196,7 +208,5 @@ public class GameEngine {
 		return player;
 	}
 
-	public void setGameDifficulty(String path) {
-
-	}
+	public SystemStats getSystemStats(){return systemStats;}
 }
