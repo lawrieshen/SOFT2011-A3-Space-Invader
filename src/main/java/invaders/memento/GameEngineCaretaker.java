@@ -8,12 +8,13 @@ import java.util.Deque;
 public class GameEngineCaretaker {
     private final Deque<GameEngineMemento> mementos = new ArrayDeque<>();
 
-    private void saveState(GameEngine gameEngine){
+    public void saveState(GameEngine gameEngine){
         GameEngineMemento memento = gameEngine.save();
         mementos.push(memento);
+        System.out.println("Triggered");
     }
 
-    private void revertGameEngine(GameEngine gameEngine){
+    public void revertGameEngine(GameEngine gameEngine){
         if (mementos == null || mementos.isEmpty()) {
             System.out.println("No previous state to revert to.");
             return;

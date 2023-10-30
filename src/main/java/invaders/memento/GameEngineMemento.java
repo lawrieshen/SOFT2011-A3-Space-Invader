@@ -21,9 +21,6 @@ public class GameEngineMemento {
     private List<Renderable> renderables;
 
     private Player player;
-
-    private boolean left;
-    private boolean right;
     private int gameWidth;
     private int gameHeight;
     private int timer;
@@ -39,8 +36,6 @@ public class GameEngineMemento {
             List<Renderable> pendingToRemoveRenderable,
             List<Renderable> renderables,
             Player player,
-            boolean left,
-            boolean right,
             int gameWidth,
             int gameHeight,
             int timer,
@@ -55,8 +50,6 @@ public class GameEngineMemento {
         this.pendingToRemoveRenderable = pendingToRemoveRenderable;
         this.renderables = renderables;
         this.player = player;
-        this.left = left;
-        this.right = right;
         this.gameWidth = gameWidth;
         this.gameHeight = gameHeight;
         this.timer = timer;
@@ -91,14 +84,6 @@ public class GameEngineMemento {
 
     public Player getPlayer() {
         return player;
-    }
-
-    public boolean isLeft() {
-        return left;
-    }
-
-    public boolean isRight() {
-        return right;
     }
 
     public int getGameHeight() {

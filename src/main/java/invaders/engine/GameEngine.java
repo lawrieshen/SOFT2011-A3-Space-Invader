@@ -20,6 +20,7 @@ import invaders.observer.GameTime;
 import invaders.rendering.Renderable;
 import invaders.strategy.FastProjectileStrategy;
 import invaders.strategy.SlowProjectileStrategy;
+import javafx.application.Platform;
 import javafx.util.Duration;
 import org.json.simple.JSONObject;
 
@@ -119,8 +120,7 @@ public class GameEngine {
 									gameScore.setGameScore(gameScore.getGameScore() + 2);
 									gameScore.notifyObservers();
 								}
-							}
-							if (renderableA.getClass().equals(Enemy.class)) {
+							} else if (renderableA.getClass().equals(Enemy.class)) {
 								if (((Enemy) renderableA).getProjectileStrategy().getClass().equals(SlowProjectileStrategy.class)){
 									gameScore.setGameScore(gameScore.getGameScore() + 3);
 									gameScore.notifyObservers();
@@ -128,6 +128,9 @@ public class GameEngine {
 									gameScore.setGameScore(gameScore.getGameScore() + 4);
 									gameScore.notifyObservers();
 								}
+							} else if (renderableA.getClass().equals(Player.class)){
+								//when player is dead, end game
+								Platform.exit();
 							}
 						}
 					}
@@ -211,6 +214,7 @@ public class GameEngine {
 			gameObjects.add(projectile);
 			renderables.add(projectile);
 			timer=0;
+
 			return true;
 		}
 		return false;
@@ -252,8 +256,6 @@ public class GameEngine {
 				new ArrayList<>(pendingToRemoveRenderable),
 				new ArrayList<>(renderables),
 				player,
-				left,
-				right,
 				gameWidth,
 				gameHeight,
 				timer,
@@ -270,8 +272,6 @@ public class GameEngine {
 		this.pendingToAddRenderable = new ArrayList<>(gameEngineMemento.getPendingToAddRenderable());
 		this.pendingToRemoveRenderable = new ArrayList<>(gameEngineMemento.getPendingToRemoveRenderable());
 		this.player = gameEngineMemento.getPlayer();
-		this.left = gameEngineMemento.isLeft();
-		this.right = gameEngineMemento.isRight();
 		this.gameWidth = gameEngineMemento.getGameWidth();
 		this.gameHeight = gameEngineMemento.getGameHeight();
 		this.timer = gameEngineMemento.getTimer();

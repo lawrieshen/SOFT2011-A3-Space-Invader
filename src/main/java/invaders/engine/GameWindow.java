@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import invaders.ConfigReader;
 import invaders.entities.EntityViewImpl;
 import invaders.entities.SpaceBackground;
+import invaders.gameobject.Enemy;
+import invaders.memento.GameEngineCaretaker;
+import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -42,6 +45,8 @@ public class GameWindow implements Serializable {
     /**Set Up Undo Button and Cheat Menu Bar**/
     private Button undoButton;
     private MenuBar cheatMenuBar;
+    /**Memento**/
+    private GameEngineCaretaker caretaker = new GameEngineCaretaker();
 
 	public GameWindow(GameEngine model){
         this.model = model;
@@ -52,29 +57,11 @@ public class GameWindow implements Serializable {
         scene = new Scene(pane, width, height);
         this.background = new SpaceBackground(model, pane);
 
-        KeyboardInputHandler keyboardInputHandler = new KeyboardInputHandler(this.model);
+        KeyboardInputHandler keyboardInputHandler = new KeyboardInputHandler(this.model, this.caretaker);
 
         scene.setOnKeyPressed(keyboardInputHandler::handlePressed);
         scene.setOnKeyReleased(keyboardInputHandler::handleReleased);
 
-//        /**Set up Undo Button**/
-//        Button undoButton = new Button("Undo");
-//        undoButton.setLayoutX(10);
-//        undoButton.setLayoutY(10);
-//        undoButton.setFocusTraversable(false);
-//        undoButton.setOnAction(e ->{
-//            //implement Undo feature
-//        });
-//        /**Set up Cheat Button**/
-//        Button cheatButton = new Button("Cheat");
-//        cheatButton.setLayoutX(70);
-//        cheatButton.setLayoutY(10);
-//        cheatButton.setFocusTraversable(false);
-//        cheatButton.setOnAction(e ->{
-//            //implement Cheat feature
-//        });
-//
-//        pane.getChildren().addAll(undoButton, cheatButton);
         /**Set Up Game Time Label**/
         gameTimeLabel = new Label("Time: 0:00");
         gameTimeLabel.setLayoutX(10);
@@ -99,6 +86,11 @@ public class GameWindow implements Serializable {
         MenuItem removeALlFastProjectiles = new MenuItem("Remove All Fast Projectiles");
         cheatMenu.getItems().addAll(removeAllSlowAliens,removeAllFastAliens,removeALlSlowProjectiles,removeALlFastProjectiles);
         cheatMenuBar.getMenus().add(cheatMenu);
+
+        undoButton.setOnAction(e -> {
+            caretaker.revertGameEngine(model);
+        });
+
 
         undoButton.setFocusTraversable(false);
         cheatMenuBar.setFocusTraversable(false);
@@ -186,9 +178,20 @@ public class GameWindow implements Serializable {
 
         String formattedScore = String.format("Score: %d", score);
         gameScoreLabel.setText(formattedScore);
+
     }
 
 	public Scene getScene() {
         return scene;
+    }
+
+    public static <T> int countClassOf(List<T> list, Class<? extends T> type) {
+        int count = 0;
+        for (T item : list) {
+            if (type.isInstance(item)) {
+                count++;
+            }
+        }
+        return count;
     }
 }
