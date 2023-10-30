@@ -10,9 +10,11 @@ import invaders.entities.EntityViewImpl;
 import invaders.entities.Player;
 import invaders.entities.SpaceBackground;
 import invaders.factory.EnemyProjectile;
+import invaders.factory.PlayerProjectile;
 import invaders.factory.Projectile;
 import invaders.gameobject.Bunker;
 import invaders.gameobject.Enemy;
+import invaders.gameobject.GameObject;
 import invaders.memento.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -99,20 +101,47 @@ public class GameWindow implements Serializable {
 
         undoButton.setOnAction(e -> {
             //to do
+            List<Renderable> renderablesToBeRemoved = new ArrayList<>();
             for (Renderable ro : model.getRenderables()){
                 if (ro.getClass().equals(Bunker.class)){
+                    renderablesToBeRemoved.add(ro);
                     ((BunkerCaretaker) caretakers.get("BunkerCaretaker")).reloadState((Bunker) ro);
                 } else if (ro.getClass().equals(Enemy.class)) {
+                    renderablesToBeRemoved.add(ro);
                     ((EnemyCaretaker) caretakers.get("EnemyCaretaker")).reloadState((Enemy) ro);
                 } else if (ro.getClass().equals(EnemyProjectile.class)){
-                    ((EnemyProjectileCaretaker) caretakers.get("EnemyProjectile")).reloadState((EnemyProjectile) ro);
+                    renderablesToBeRemoved.add(ro);
+                    ((EnemyProjectileCaretaker) caretakers.get("EnemyProjectileCaretaker")).reloadState((EnemyProjectile) ro);
                 } else if (ro.getClass().equals(Player.class)) {
-                    ((PlayerCaretaker) caretakers.get("Player")).reloadState((Player) ro);
+                    renderablesToBeRemoved.add(ro);
+                    ((PlayerCaretaker) caretakers.get("PlayerCaretaker")).reloadState((Player) ro);
+                } else if (ro.getClass().equals(PlayerProjectile.class)) {
+                    ro.takeDamage(1);
+//                    renderablesToBeRemoved.add(ro);
+//                    model.getPendingToRemoveRenderable().add(ro);
+//                    model.getPendingToRemoveGameObject().add((GameObject) ro);
                 }
             }
             ((GameScoreCaretaker) caretakers.get("GameScoreCaretaker")).reloadState(model.getGameScore());
             ((GameTimeCaretaker) caretakers.get("GameTimeCaretaker")).reloadState(model.getGameTime());
 
+            for (Renderable entity : renderablesToBeRemoved){
+                for (EntityView entityView : entityViews){
+                    if (entityView.matchesEntity(entity)){
+                        entityView.markForDelete();
+                    }
+                }
+            }
+
+            for (EntityView entityView : entityViews) {
+                if (entityView.isMarkedForDelete()) {
+                    pane.getChildren().remove(entityView.getNode());
+                }
+            }
+
+            entityViews.removeIf(EntityView::isMarkedForDelete);
+
+            //renderablesToBeRemoved.clear();
         });
 
 
@@ -207,15 +236,5 @@ public class GameWindow implements Serializable {
 
 	public Scene getScene() {
         return scene;
-    }
-
-    public static <T> int countClassOf(List<T> list, Class<? extends T> type) {
-        int count = 0;
-        for (T item : list) {
-            if (type.isInstance(item)) {
-                count++;
-            }
-        }
-        return count;
     }
 }
