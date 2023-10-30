@@ -1,7 +1,8 @@
 package invaders.rendering;
 
-import invaders.physics.Collider;
+import invaders.memento.PlayerMemento;
 import invaders.physics.Vector2D;
+import invaders.utils.DeepCopy;
 import javafx.scene.image.Image;
 
 /**

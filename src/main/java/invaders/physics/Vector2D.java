@@ -1,9 +1,11 @@
 package invaders.physics;
 
+import java.io.Serializable;
+
 /**
  * A utility class for storing position information
  */
-public class Vector2D {
+public class Vector2D implements Serializable {
 
 	private double x;
 	private double y;

@@ -4,9 +4,11 @@ import invaders.engine.GameEngine;
 import invaders.factory.EnemyProjectileFactory;
 import invaders.factory.Projectile;
 import invaders.factory.ProjectileFactory;
+import invaders.memento.EnemyMemento;
 import invaders.physics.Vector2D;
 import invaders.rendering.Renderable;
 import invaders.strategy.ProjectileStrategy;
+import invaders.utils.DeepCopy;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;
@@ -148,6 +150,18 @@ public class Enemy implements GameObject, Renderable {
 
     public ProjectileStrategy getProjectileStrategy() {
         return projectileStrategy;
+    }
+
+    public EnemyMemento save(){
+        return new EnemyMemento(
+                DeepCopy.deepCopy(getPosition(), Vector2D.class),
+                getHealth()
+        );
+    }
+
+    public void restore(EnemyMemento enemyMemento){
+        setPosition(enemyMemento.getPosition());
+        setLives((int) enemyMemento.getHealth());
     }
 
 }

@@ -1,11 +1,19 @@
 package invaders.engine;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 import invaders.entities.EntityViewImpl;
+import invaders.entities.Player;
 import invaders.entities.SpaceBackground;
+import invaders.factory.EnemyProjectile;
+import invaders.factory.Projectile;
+import invaders.gameobject.Bunker;
+import invaders.gameobject.Enemy;
+import invaders.memento.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -40,17 +48,26 @@ public class GameWindow implements Serializable {
     private Button undoButton;
     private MenuBar cheatMenuBar;
     /**Memento**/
+    private Map<String, Caretaker> caretakers= new HashMap();
 
 	public GameWindow(GameEngine model){
         this.model = model;
 		this.width =  model.getGameWidth();
         this.height = model.getGameHeight();
 
+        /**Register all caretakers**/
+        caretakers.put("BunkerCaretaker", new BunkerCaretaker());
+        caretakers.put("EnemyCaretaker", new EnemyCaretaker());
+        caretakers.put("EnemyProjectileCaretaker", new EnemyProjectileCaretaker());
+        caretakers.put("GameScoreCaretaker", new GameScoreCaretaker());
+        caretakers.put("GameTimeCaretaker", new GameTimeCaretaker());
+        caretakers.put("PlayerCaretaker", new PlayerCaretaker());
+
         pane = new Pane();
         scene = new Scene(pane, width, height);
         this.background = new SpaceBackground(model, pane);
 
-        KeyboardInputHandler keyboardInputHandler = new KeyboardInputHandler(this.model);
+        KeyboardInputHandler keyboardInputHandler = new KeyboardInputHandler(this.model, caretakers);
 
         scene.setOnKeyPressed(keyboardInputHandler::handlePressed);
         scene.setOnKeyReleased(keyboardInputHandler::handleReleased);
@@ -82,6 +99,20 @@ public class GameWindow implements Serializable {
 
         undoButton.setOnAction(e -> {
             //to do
+            for (Renderable ro : model.getRenderables()){
+                if (ro.getClass().equals(Bunker.class)){
+                    ((BunkerCaretaker) caretakers.get("BunkerCaretaker")).reloadState((Bunker) ro);
+                } else if (ro.getClass().equals(Enemy.class)) {
+                    ((EnemyCaretaker) caretakers.get("EnemyCaretaker")).reloadState((Enemy) ro);
+                } else if (ro.getClass().equals(EnemyProjectile.class)){
+                    ((EnemyProjectileCaretaker) caretakers.get("EnemyProjectile")).reloadState((EnemyProjectile) ro);
+                } else if (ro.getClass().equals(Player.class)) {
+                    ((PlayerCaretaker) caretakers.get("Player")).reloadState((Player) ro);
+                }
+            }
+            ((GameScoreCaretaker) caretakers.get("GameScoreCaretaker")).reloadState(model.getGameScore());
+            ((GameTimeCaretaker) caretakers.get("GameTimeCaretaker")).reloadState(model.getGameTime());
+
         });
 
 

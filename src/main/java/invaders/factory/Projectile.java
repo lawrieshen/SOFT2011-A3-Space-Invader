@@ -58,4 +58,11 @@ public abstract class Projectile implements Renderable, GameObject {
         return this.lives>0;
     }
 
+    public void setPosition(Vector2D position) {
+        this.position = position;
+    }
+
+    public void setLives(int lives) {
+        this.lives = lives;
+    }
 }

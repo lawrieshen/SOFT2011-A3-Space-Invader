@@ -1,6 +1,7 @@
 package invaders.factory;
 
 import invaders.engine.GameEngine;
+import invaders.memento.EnemyProjectileMemento;
 import invaders.physics.Vector2D;
 import invaders.strategy.ProjectileStrategy;
 import javafx.scene.image.Image;
@@ -27,5 +28,17 @@ public class EnemyProjectile extends Projectile{
     @Override
     public String getRenderableObjectName() {
         return "EnemyProjectile";
+    }
+
+    public EnemyProjectileMemento save(){
+        return new EnemyProjectileMemento(
+               getPosition(),
+               getHealth()
+        );
+    }
+
+    public void restore(EnemyProjectileMemento enemyProjectileMemento){
+        super.setPosition(enemyProjectileMemento.getPosition());
+        super.setLives((int) enemyProjectileMemento.getHealth());
     }
 }

@@ -23,8 +23,12 @@ public class DeepCopy {
             ois.close();
 
             return copy;
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException("Deep copy failed: " + e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Deep copy failed for IOException: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Deep copy failed for ClassNotFoundException: " + e.getMessage());
         }
     }
 

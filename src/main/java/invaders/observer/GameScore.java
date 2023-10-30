@@ -2,6 +2,7 @@ package invaders.observer;
 
 import invaders.factory.Projectile;
 import invaders.gameobject.Enemy;
+import invaders.memento.GameScoreMemento;
 import invaders.rendering.Renderable;
 import invaders.strategy.FastProjectileStrategy;
 import invaders.strategy.SlowProjectileStrategy;
@@ -49,5 +50,13 @@ public class GameScore implements Subject{
         for (Observer o : observers){
             o.update();
         }
+    }
+
+    public GameScoreMemento save(){
+        return new GameScoreMemento(gameScore);
+    }
+
+    public void restore(GameScoreMemento gameScoreMemento){
+        this.setGameScore(gameScoreMemento.getGameScore());
     }
 }

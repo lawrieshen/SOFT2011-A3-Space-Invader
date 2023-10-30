@@ -1,4 +1,7 @@
 package invaders.state;
-public interface BunkerState {
+
+import java.io.Serializable;
+
+public interface BunkerState extends Serializable {
     public void takeDamage();
 }

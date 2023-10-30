@@ -1,6 +1,8 @@
 package invaders.observer;
 
 
+import invaders.memento.GameScoreMemento;
+import invaders.memento.GameTimeMemento;
 import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,5 +33,13 @@ public class GameTime implements Subject{
         for (Observer o : observers){
             o.update();
         }
+    }
+
+    public GameTimeMemento save(){
+        return new GameTimeMemento(gameTime);
+    }
+
+    public void restore(GameTimeMemento gameTimeMemento){
+        this.setTime(gameTimeMemento.getGameTime());
     }
 }
