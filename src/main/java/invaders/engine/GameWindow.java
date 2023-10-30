@@ -16,6 +16,8 @@ import invaders.gameobject.Bunker;
 import invaders.gameobject.Enemy;
 import invaders.gameobject.GameObject;
 import invaders.memento.*;
+import invaders.strategy.FastProjectileStrategy;
+import invaders.strategy.SlowProjectileStrategy;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -99,6 +101,43 @@ public class GameWindow implements Serializable {
         cheatMenu.getItems().addAll(removeAllSlowAliens,removeAllFastAliens,removeALlSlowProjectiles,removeALlFastProjectiles);
         cheatMenuBar.getMenus().add(cheatMenu);
 
+        removeAllSlowAliens.setOnAction(e -> {
+            for (Renderable ro : model.getRenderables()){
+                if (ro.getClass().equals(Enemy.class)){
+                    if (((Enemy) ro).getProjectileStrategy().getClass().equals(SlowProjectileStrategy.class)){
+                        ro.takeDamage(((int)ro.getHealth())+1);
+                    }
+                }
+            }
+        });
+        removeAllFastAliens.setOnAction(e -> {
+            for (Renderable ro : model.getRenderables()){
+                if (ro.getClass().equals(Enemy.class)){
+                    if (((Enemy) ro).getProjectileStrategy().getClass().equals(FastProjectileStrategy.class)){
+                        ro.takeDamage(((int)ro.getHealth())+1);
+                    }
+                }
+            }
+        });
+        removeALlSlowProjectiles.setOnAction(e -> {
+            for (Renderable ro : model.getRenderables()){
+                if (ro.getClass().equals(EnemyProjectile.class)){
+                    if (((EnemyProjectile) ro).getStrategy().getClass().equals(SlowProjectileStrategy.class)){
+                        ro.takeDamage(((int)ro.getHealth())+1);
+                    }
+                }
+            }
+        });
+        removeALlFastProjectiles.setOnAction(e -> {
+            for (Renderable ro : model.getRenderables()){
+                if (ro.getClass().equals(EnemyProjectile.class)){
+                    if (((EnemyProjectile) ro).getStrategy().getClass().equals(FastProjectileStrategy.class)){
+                        ro.takeDamage(((int)ro.getHealth())+1);
+                    }
+                }
+            }
+        });
+
         undoButton.setOnAction(e -> {
             //to do
             List<Renderable> renderablesToBeRemoved = new ArrayList<>();
@@ -117,9 +156,6 @@ public class GameWindow implements Serializable {
                     ((PlayerCaretaker) caretakers.get("PlayerCaretaker")).reloadState((Player) ro);
                 } else if (ro.getClass().equals(PlayerProjectile.class)) {
                     ro.takeDamage(1);
-//                    renderablesToBeRemoved.add(ro);
-//                    model.getPendingToRemoveRenderable().add(ro);
-//                    model.getPendingToRemoveGameObject().add((GameObject) ro);
                 }
             }
             ((GameScoreCaretaker) caretakers.get("GameScoreCaretaker")).reloadState(model.getGameScore());
@@ -140,8 +176,6 @@ public class GameWindow implements Serializable {
             }
 
             entityViews.removeIf(EntityView::isMarkedForDelete);
-
-            //renderablesToBeRemoved.clear();
         });
 
 
