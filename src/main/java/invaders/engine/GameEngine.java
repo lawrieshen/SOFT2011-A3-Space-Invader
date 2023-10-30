@@ -13,7 +13,6 @@ import invaders.gameobject.Bunker;
 import invaders.gameobject.Enemy;
 import invaders.gameobject.GameObject;
 import invaders.entities.Player;
-import invaders.memento.GameEngineMemento;
 import invaders.observer.GameScore;
 import invaders.observer.SystemStats;
 import invaders.observer.GameTime;
@@ -247,37 +246,6 @@ public class GameEngine {
 	public GameTime getGameTime(){return  gameTime;}
 
 	/**Implement Memento for Undo**/
-	public GameEngineMemento save(){
-		return new GameEngineMemento(
-				new ArrayList<>(gameObjects),
-				new ArrayList<>(pendingToAddGameObject),
-				new ArrayList<>(pendingToRemoveGameObject),
-				new ArrayList<>(pendingToAddRenderable),
-				new ArrayList<>(pendingToRemoveRenderable),
-				new ArrayList<>(renderables),
-				player,
-				gameWidth,
-				gameHeight,
-				timer,
-				gameTime,
-				gameScore,
-				systemStats
-		);
-	}
 
-	public void restore(GameEngineMemento gameEngineMemento){
-		this.gameObjects = new ArrayList<>(gameEngineMemento.getGameObjects());
-		this.pendingToAddGameObject = new ArrayList<>(gameEngineMemento.getPendingToAddGameObject());
-		this.pendingToRemoveGameObject = new ArrayList<>(gameEngineMemento.getPendingToRemoveGameObject());
-		this.pendingToAddRenderable = new ArrayList<>(gameEngineMemento.getPendingToAddRenderable());
-		this.pendingToRemoveRenderable = new ArrayList<>(gameEngineMemento.getPendingToRemoveRenderable());
-		this.player = gameEngineMemento.getPlayer();
-		this.gameWidth = gameEngineMemento.getGameWidth();
-		this.gameHeight = gameEngineMemento.getGameHeight();
-		this.timer = gameEngineMemento.getTimer();
-		this.gameTime = gameEngineMemento.getGameTime();
-		this.gameScore = gameEngineMemento.getGameScore();
-		this.systemStats = gameEngineMemento.getSystemStats();
-	}
 
 }

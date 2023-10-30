@@ -1,6 +1,5 @@
 package invaders.engine;
 
-import invaders.memento.GameEngineCaretaker;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.media.Media;
@@ -20,11 +19,9 @@ class KeyboardInputHandler {
 
     private Map<String, MediaPlayer> sounds = new HashMap<>();
     /**Implement Memento**/
-    private GameEngineCaretaker caretaker;
 
-    KeyboardInputHandler(GameEngine model, GameEngineCaretaker caretaker) {
+    KeyboardInputHandler(GameEngine model) {
         this.model = model;
-        this.caretaker = caretaker;
 
         // TODO (longGoneUser): Is there a better place for this code?
         URL mediaUrl = getClass().getResource("/shoot.wav");
@@ -46,8 +43,7 @@ class KeyboardInputHandler {
                 MediaPlayer shoot = sounds.get("shoot");
                 shoot.stop();
                 shoot.play();
-                /**save state of the game engine when the player shoot**/
-                caretaker.saveState(model);
+                /**save state of the game objects when the player shoot**/
             }
         }
 

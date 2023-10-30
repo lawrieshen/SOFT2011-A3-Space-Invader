@@ -4,16 +4,11 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.ArrayList;
 
-import invaders.ConfigReader;
 import invaders.entities.EntityViewImpl;
 import invaders.entities.SpaceBackground;
-import invaders.gameobject.Enemy;
-import invaders.memento.GameEngineCaretaker;
-import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.util.Duration;
 
@@ -23,7 +18,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import org.json.simple.JSONObject;
 
 public class GameWindow implements Serializable {
 	private final int width;
@@ -46,7 +40,6 @@ public class GameWindow implements Serializable {
     private Button undoButton;
     private MenuBar cheatMenuBar;
     /**Memento**/
-    private GameEngineCaretaker caretaker = new GameEngineCaretaker();
 
 	public GameWindow(GameEngine model){
         this.model = model;
@@ -57,7 +50,7 @@ public class GameWindow implements Serializable {
         scene = new Scene(pane, width, height);
         this.background = new SpaceBackground(model, pane);
 
-        KeyboardInputHandler keyboardInputHandler = new KeyboardInputHandler(this.model, this.caretaker);
+        KeyboardInputHandler keyboardInputHandler = new KeyboardInputHandler(this.model);
 
         scene.setOnKeyPressed(keyboardInputHandler::handlePressed);
         scene.setOnKeyReleased(keyboardInputHandler::handleReleased);
@@ -88,7 +81,7 @@ public class GameWindow implements Serializable {
         cheatMenuBar.getMenus().add(cheatMenu);
 
         undoButton.setOnAction(e -> {
-            caretaker.revertGameEngine(model);
+            //to do
         });
 
 
