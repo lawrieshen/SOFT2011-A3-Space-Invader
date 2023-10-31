@@ -1,8 +1,9 @@
-package invaders.engine;
+package invaders.singleton;
 
+import invaders.engine.GameEngine;
+import invaders.engine.GameWindow;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.stage.Stage;
 
 public class DifficultyLevelMenu {
     private DifficultyLevelMenuWindow difficultyLevelMenuWindow;

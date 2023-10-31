@@ -46,6 +46,7 @@ public class GameEngine {
 	private GameTime gameTime = new GameTime();
 	private GameScore gameScore = new GameScore();
 	private SystemStats systemStats = new SystemStats(gameTime, gameScore);
+	private int numberOfEnemy = 0;
 
 	public GameEngine(String config){
 		// Read the config here
@@ -76,7 +77,9 @@ public class GameEngine {
 			Enemy enemy = director.constructEnemy(this,enemyBuilder,(JSONObject)eachEnemyInfo);
 			gameObjects.add(enemy);
 			renderables.add(enemy);
+			numberOfEnemy++;
 		}
+		numberOfEnemy = numberOfEnemy*2;
 
 		/**Observer**/
 		//register
@@ -130,6 +133,13 @@ public class GameEngine {
 								}
 							} else if (renderableA.getClass().equals(Player.class)){
 								//when player is dead, end game
+								System.out.println("Aliens Win");
+								System.out.println("Game Score: "+gameScore.getGameScore());
+								double minutes = (double) gameTime.getGameTime().toMinutes();
+								double seconds = (double) (gameTime.getGameTime().toSeconds()%60);
+
+								String formattedTime  = String.format("%02.0f:%02.0f", minutes, seconds);
+								System.out.println("Game Time: "+formattedTime);
 								Platform.exit();
 							}
 						}
@@ -167,6 +177,22 @@ public class GameEngine {
 		gameTime.notifyObservers();
 
 
+		int counter = 0;
+		for (Renderable ro : renderables){
+			if (ro.isAlive() && ro.getRenderableObjectName().equals("Enemy")){
+				counter++;
+			}
+		}
+		if (counter <=0){
+			System.out.println("Player Wins");
+			System.out.println("Game Score: "+gameScore.getGameScore());
+			double minutes = (double) gameTime.getGameTime().toMinutes();
+			double seconds = (double) (gameTime.getGameTime().toSeconds()%60);
+
+			String formattedTime  = String.format("%02.0f:%02.0f", minutes, seconds);
+			System.out.println("Game Time: "+formattedTime);
+			Platform.exit();
+		}
 	}
 
 	public List<Renderable> getRenderables(){
@@ -246,7 +272,6 @@ public class GameEngine {
 	public GameScore getGameScore(){return gameScore;}
 	public GameTime getGameTime(){return  gameTime;}
 
-	/**Implement Memento for Undo**/
-
-
+	public int getNumberOfEnemy(){return numberOfEnemy;}
+	public void setNumberOfEnemy(int count){this.numberOfEnemy = count;}
 }

@@ -18,6 +18,7 @@ import invaders.gameobject.GameObject;
 import invaders.memento.*;
 import invaders.strategy.FastProjectileStrategy;
 import invaders.strategy.SlowProjectileStrategy;
+import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -230,6 +231,8 @@ public class GameWindow implements Serializable {
                         entityView.markForDelete();
                     }
                 }
+                model.getPendingToRemoveGameObject().add((GameObject) entity);
+                model.getPendingToRemoveRenderable().add(entity);
             }
         }
 
@@ -238,7 +241,6 @@ public class GameWindow implements Serializable {
                 pane.getChildren().remove(entityView.getNode());
             }
         }
-
 
         model.getGameObjects().removeAll(model.getPendingToRemoveGameObject());
         model.getGameObjects().addAll(model.getPendingToAddGameObject());

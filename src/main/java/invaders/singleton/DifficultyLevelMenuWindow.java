@@ -1,17 +1,15 @@
-package invaders.engine;
+package invaders.singleton;
 
+import invaders.engine.GameEngine;
+import invaders.engine.GameWindow;
 import invaders.entities.MenuBackground;
-import invaders.entities.SpaceBackground;
 import invaders.rendering.Renderable;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 public class DifficultyLevelMenuWindow {
     private Stage primaryStage;
