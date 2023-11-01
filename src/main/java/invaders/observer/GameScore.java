@@ -24,17 +24,6 @@ public class GameScore implements Subject{
         this.gameScore = gameScore;
     }
 
-    //    public void gainScore(Projectile projectile, Enemy enemy){
-//        if (projectile.getClass().equals(SlowProjectileStrategy.class)){
-//            gameScore = gameScore + 1;
-//        } else if (projectile.getClass().equals(FastProjectileStrategy.class)) {
-//            gameScore = gameScore + 2;
-//        } else if (enemy.get){
-//
-//        }
-//
-//    }
-
     @Override
     public void attach(Observer observer) {
         observers.add(observer);
