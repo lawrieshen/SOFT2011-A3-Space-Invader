@@ -59,6 +59,7 @@ public class GameWindow implements Serializable, Observer {
 
 
     private int gameScoreV2 = 0;
+    private Duration gameTimeV2 = Duration.ZERO;
 
 	public GameWindow(GameEngine model){
         this.model = model;
@@ -207,6 +208,7 @@ public class GameWindow implements Serializable, Observer {
             }
         }
 
+
     }
 
 	public void run() {
@@ -218,6 +220,8 @@ public class GameWindow implements Serializable, Observer {
 
 
     private void draw(){
+        gameTimeV2 = gameTimeV2.add(Duration.millis(17));
+
         model.update();
 
         List<Renderable> renderables = model.getRenderables();
@@ -254,11 +258,35 @@ public class GameWindow implements Serializable, Observer {
                 pane.getChildren().remove(entityView.getNode());
             }
         }
+        // Observer - capture shot projectiles to register observer to subjects (Enemy projectiles)
+        for (Renderable ro : model.getPendingToAddRenderable()){
+            if (ro.getClass().equals(EnemyProjectile.class)){
+                ((EnemyProjectile) ro).attach(this);
+            }
+        }
 
-        //Observer - capture all dead enemy
+        //Observer - capture all dead enemy (not projectile, coz us need to make sure it is destroyed by player projectile )
         for (Renderable ro : model.getPendingToRemoveRenderable()){
             if (ro.getClass().equals(Enemy.class)){
                 ((Enemy) ro).notifyObservers();
+            }
+        }
+        //Observer - capture all dead enemy projectile collides with player projectiles
+        List<PlayerProjectile> playerProjectiles = new ArrayList<>();
+        for (Renderable ro : model.getRenderables()){
+            if (ro.getClass().equals(PlayerProjectile.class)){
+                playerProjectiles.add((PlayerProjectile) ro);
+            }
+        }
+
+        for (Renderable ro : model.getPendingToRemoveRenderable()){
+            if (ro.getClass().equals(EnemyProjectile.class)){
+                for (PlayerProjectile playerProjectile : playerProjectiles){
+                    if (ro.isColliding(playerProjectile)){
+                        ((EnemyProjectile) ro).notifyObservers();
+                        break;
+                    }
+                }
             }
         }
 
@@ -276,8 +304,8 @@ public class GameWindow implements Serializable, Observer {
 
 
         /**Draw Duration of Game DYNAMICALLY**/
-        double minutes = (double) model.getSystemStats().getGameTime().toMinutes();
-        double seconds = (double) (model.getSystemStats().getGameTime().toSeconds()%60);
+        double minutes = (double) gameTimeV2.toMinutes();
+        double seconds = (double) (gameTimeV2.toSeconds()%60);
 
         String formattedTime  = String.format("Time: %02.0f:%02.0f", minutes, seconds);
         gameTimeLabel.setText(formattedTime);
@@ -302,9 +330,9 @@ public class GameWindow implements Serializable, Observer {
                 gameScoreV2 = gameScoreV2 + 4;
             }
         } else if (subject.getClass().equals(EnemyProjectile.class)) {
-            if (((EnemyProjectile) subject).getClass().equals(SlowProjectileStrategy.class)){
+            if (((EnemyProjectile) subject).getStrategy().getClass().equals(SlowProjectileStrategy.class)){
                 gameScoreV2 = gameScoreV2 + 1;
-            } else if (((EnemyProjectile) subject).getClass().equals(FastProjectileStrategy.class)) {
+            } else if (((EnemyProjectile) subject).getStrategy().getClass().equals(FastProjectileStrategy.class)) {
                 gameScoreV2 = gameScoreV2 + 2;
             }
         }
