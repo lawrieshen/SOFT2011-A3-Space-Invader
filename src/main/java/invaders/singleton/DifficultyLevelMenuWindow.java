@@ -7,6 +7,7 @@ import invaders.rendering.Renderable;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -18,9 +19,6 @@ public class DifficultyLevelMenuWindow {
     private Scene scene;
     private Pane pane;
     private Renderable background;
-    private double xViewportOffset = 0.0;
-    private double yViewportOffset = 0.0;
-    // private static final double VIEWPORT_MARGIN = 280.0;
     /** Singleton instance -- Lazy Initialization Thread-Safe **/
     private static DifficultyLevelMenuWindow instance;
 
@@ -33,8 +31,7 @@ public class DifficultyLevelMenuWindow {
         this.background = new MenuBackground(pane);
 
         /**Set up Difficulty Level Menu**/
-        DifficultyLevelMenu menuHandler = new DifficultyLevelMenu(this);
-        Menu difficultyMenu = menuHandler.createDifficultyMenu();
+        Menu difficultyMenu = createDifficultyMenu();
         MenuBar menuBar = new MenuBar();
         menuBar.getMenus().add(difficultyMenu);
         VBox layoutForDLM = new VBox();
@@ -55,6 +52,40 @@ public class DifficultyLevelMenuWindow {
         window.run();
 
         primaryStage.setScene(window.getScene());
+    }
+
+    public Menu createDifficultyMenu() {
+
+        Menu difficultyMenu = new Menu("Difficulty");
+
+        MenuItem easyMenuItem = new MenuItem("Easy");
+        MenuItem normalMenuItem = new MenuItem("Normal");
+        MenuItem hardMenuItem = new MenuItem("Hard");
+
+        easyMenuItem.setOnAction(e -> {
+            // Set the game difficulty to easy
+            LevelManager levelManager = LevelManager.getInstance();
+            levelManager.easyConfiguration();
+
+            switchToGameWindow(levelManager.getModel(), levelManager.getWindow());
+        });
+
+        normalMenuItem.setOnAction(e -> {
+            // Set the game difficulty to normal
+            LevelManager levelManager = LevelManager.getInstance();
+            levelManager.mediumConfiguration();
+            switchToGameWindow(levelManager.getModel(), levelManager.getWindow());
+        });
+
+        hardMenuItem.setOnAction(e -> {
+            // Set the game difficulty to hard
+            LevelManager levelManager = LevelManager.getInstance();
+            levelManager.hardConfiguration();
+            switchToGameWindow(levelManager.getModel(), levelManager.getWindow());
+        });
+
+        difficultyMenu.getItems().addAll(easyMenuItem, normalMenuItem, hardMenuItem);
+        return difficultyMenu;
     }
 
 }
