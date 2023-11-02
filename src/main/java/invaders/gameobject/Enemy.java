@@ -5,6 +5,8 @@ import invaders.factory.EnemyProjectileFactory;
 import invaders.factory.Projectile;
 import invaders.factory.ProjectileFactory;
 import invaders.memento.EnemyMemento;
+import invaders.observer2.Observer;
+import invaders.observer2.Subject;
 import invaders.physics.Vector2D;
 import invaders.rendering.Renderable;
 import invaders.strategy.ProjectileStrategy;
@@ -12,9 +14,10 @@ import invaders.utils.DeepCopy;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
-public class Enemy implements GameObject, Renderable {
+public class Enemy implements GameObject, Renderable, Subject {
     private Vector2D position;
     private int lives = 1;
     private Image image;
@@ -26,6 +29,8 @@ public class Enemy implements GameObject, Renderable {
     private ProjectileFactory projectileFactory;
     private Image projectileImage;
     private Random random = new Random();
+
+    private List<Observer> observers = new ArrayList<>();
 
     public Enemy(Vector2D position) {
         this.position = position;
@@ -164,4 +169,20 @@ public class Enemy implements GameObject, Renderable {
         setLives((int) enemyMemento.getHealth());
     }
 
+    @Override
+    public void attach(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void detach(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer observer : observers){
+            observer.update(this);
+        }
+    }
 }

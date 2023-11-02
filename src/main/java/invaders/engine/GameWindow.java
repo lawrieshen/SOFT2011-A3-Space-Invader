@@ -16,6 +16,8 @@ import invaders.gameobject.Bunker;
 import invaders.gameobject.Enemy;
 import invaders.gameobject.GameObject;
 import invaders.memento.*;
+import invaders.observer2.Observer;
+import invaders.observer2.Subject;
 import invaders.strategy.FastProjectileStrategy;
 import invaders.strategy.SlowProjectileStrategy;
 import javafx.application.Platform;
@@ -32,7 +34,7 @@ import javafx.animation.Timeline;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 
-public class GameWindow implements Serializable {
+public class GameWindow implements Serializable, Observer {
 	private final int width;
     private final int height;
 	private Scene scene;
@@ -54,6 +56,9 @@ public class GameWindow implements Serializable {
     private MenuBar cheatMenuBar;
     /**Memento**/
     private Map<String, Caretaker> caretakers= new HashMap();
+
+
+    private int gameScoreV2 = 0;
 
 	public GameWindow(GameEngine model){
         this.model = model;
@@ -194,6 +199,14 @@ public class GameWindow implements Serializable {
 
         pane.getChildren().add(hbox);
 
+
+        //register observer to subject
+        for (Renderable ro : model.getRenderables()){
+            if (ro.getClass().equals(Enemy.class)){
+                ((Enemy) ro).attach(this);
+            }
+        }
+
     }
 
 	public void run() {
@@ -242,6 +255,13 @@ public class GameWindow implements Serializable {
             }
         }
 
+        //Observer - capture all dead enemy
+        for (Renderable ro : model.getPendingToRemoveRenderable()){
+            if (ro.getClass().equals(Enemy.class)){
+                ((Enemy) ro).notifyObservers();
+            }
+        }
+
         model.getGameObjects().removeAll(model.getPendingToRemoveGameObject());
         model.getGameObjects().addAll(model.getPendingToAddGameObject());
         model.getRenderables().removeAll(model.getPendingToRemoveRenderable());
@@ -263,14 +283,30 @@ public class GameWindow implements Serializable {
         gameTimeLabel.setText(formattedTime);
 
         /**Draw Score Recorder DYNAMICALLY**/
-        int score = model.getSystemStats().getGameScore();
 
-        String formattedScore = String.format("Score: %d", score);
+        String formattedScore = String.format("Score: %d", gameScoreV2);
         gameScoreLabel.setText(formattedScore);
 
     }
 
 	public Scene getScene() {
         return scene;
+    }
+
+    @Override
+    public void update(Subject subject) {
+        if (subject.getClass().equals(Enemy.class)){
+            if (((Enemy) subject).getProjectileStrategy().getClass().equals(SlowProjectileStrategy.class)){
+                gameScoreV2 = gameScoreV2 + 3;
+            } else if (((Enemy) subject).getProjectileStrategy().getClass().equals(FastProjectileStrategy.class)) {
+                gameScoreV2 = gameScoreV2 + 4;
+            }
+        } else if (subject.getClass().equals(EnemyProjectile.class)) {
+            if (((EnemyProjectile) subject).getClass().equals(SlowProjectileStrategy.class)){
+                gameScoreV2 = gameScoreV2 + 1;
+            } else if (((EnemyProjectile) subject).getClass().equals(FastProjectileStrategy.class)) {
+                gameScoreV2 = gameScoreV2 + 2;
+            }
+        }
     }
 }
