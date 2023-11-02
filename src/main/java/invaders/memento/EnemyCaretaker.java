@@ -1,13 +1,11 @@
 package invaders.memento;
 
-import invaders.entities.Player;
 import invaders.gameobject.Enemy;
-import invaders.rendering.Renderable;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-public class EnemyCaretaker implements Caretaker{
+public class EnemyCaretaker {
     private final Deque<EnemyMemento> mementos = new ArrayDeque<>();
     public void saveState(Enemy enemy){
         EnemyMemento memento = enemy.save();

@@ -5,7 +5,7 @@ import invaders.gameobject.Bunker;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-public class BunkerCaretaker implements Caretaker{
+public class BunkerCaretaker {
     private final Deque<BunkerMemento> mementos = new ArrayDeque<>();
 
     public void saveState(Bunker bunker){

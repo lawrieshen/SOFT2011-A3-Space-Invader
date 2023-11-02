@@ -24,24 +24,26 @@ class KeyboardInputHandler {
 
     private Map<String, MediaPlayer> sounds = new HashMap<>();
     /**Implement Memento**/
-    private Map<String, Caretaker> caretakers;
+    private Map<String, Object> caretakers;
     private BunkerCaretaker bunkerCaretaker;
     private EnemyCaretaker enemyCaretaker;
     private EnemyProjectileCaretaker enemyProjectileCaretaker;
-    private GameTimeCaretaker gameTimeCaretaker;
-    private GameScoreCaretaker gameScoreCaretaker;
     private PlayerCaretaker playerCaretaker;
+    private SystemStatsCaretaker systemStatsCaretaker;
 
-    KeyboardInputHandler(GameEngine model, Map<String, Caretaker> caretakers) {
-        this.model = model;
-        this.caretakers = caretakers;
+    /**Extensions**/
+    private GameWindow window;
+
+    KeyboardInputHandler(GameWindow window) {
+        this.window = window;
+        this.model = window.getModel();
+        this.caretakers = window.getCaretakers();
 
         this.bunkerCaretaker = (BunkerCaretaker) caretakers.get("BunkerCaretaker");
         this.enemyCaretaker = (EnemyCaretaker) caretakers.get("EnemyCaretaker");
         this.enemyProjectileCaretaker = (EnemyProjectileCaretaker) caretakers.get("EnemyProjectileCaretaker");
-        this.gameScoreCaretaker = (GameScoreCaretaker) caretakers.get("GameScoreCaretaker");
-        this.gameTimeCaretaker = (GameTimeCaretaker) caretakers.get("GameTimeCaretaker");
         this.playerCaretaker = (PlayerCaretaker) caretakers.get("PlayerCaretaker");
+        this.systemStatsCaretaker = (SystemStatsCaretaker) caretakers.get("SystemStatsCaretaker");
 
 
         // TODO (longGoneUser): Is there a better place for this code?
@@ -78,8 +80,7 @@ class KeyboardInputHandler {
                         playerCaretaker.saveState((Player) ro);
                     }
                 }
-                gameScoreCaretaker.saveState(model.getGameScore());
-                gameTimeCaretaker.saveState(model.getGameTime());
+                systemStatsCaretaker.saveState(window);
             }
         }
 

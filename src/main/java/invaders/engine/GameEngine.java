@@ -13,9 +13,6 @@ import invaders.gameobject.Bunker;
 import invaders.gameobject.Enemy;
 import invaders.gameobject.GameObject;
 import invaders.entities.Player;
-import invaders.observer.GameScore;
-import invaders.observer.SystemStats;
-import invaders.observer.GameTime;
 import invaders.rendering.Renderable;
 import invaders.strategy.FastProjectileStrategy;
 import invaders.strategy.SlowProjectileStrategy;
@@ -43,10 +40,6 @@ public class GameEngine {
 	private int gameWidth;
 	private int gameHeight;
 	private int timer = 45;
-	private GameTime gameTime = new GameTime();
-	private GameScore gameScore = new GameScore();
-	private SystemStats systemStats = new SystemStats(gameTime, gameScore);
-	private int numberOfEnemy = 0;
 
 	public GameEngine(String config){
 		// Read the config here
@@ -77,14 +70,7 @@ public class GameEngine {
 			Enemy enemy = director.constructEnemy(this,enemyBuilder,(JSONObject)eachEnemyInfo);
 			gameObjects.add(enemy);
 			renderables.add(enemy);
-			numberOfEnemy++;
 		}
-		numberOfEnemy = numberOfEnemy*2;
-
-		/**Observer**/
-		//register
-		gameTime.attach(systemStats);
-		gameScore.attach(systemStats);
 	}
 
 	/**
@@ -113,36 +99,20 @@ public class GameEngine {
 					if(renderableA.isColliding(renderableB) && (renderableA.getHealth()>0 && renderableB.getHealth()>0)) {
 						renderableA.takeDamage(1);
 						renderableB.takeDamage(1);
-						/**Gain Score Here**/
-						if (renderableA.getHealth()<=0) {
-							if (renderableA.getClass().equals(EnemyProjectile.class)) {
-								if (((EnemyProjectile) renderableA).getStrategy().getClass().equals(SlowProjectileStrategy.class)) {
-									gameScore.setGameScore(gameScore.getGameScore() + 1);
-									gameScore.notifyObservers();
-								} else if (((EnemyProjectile) renderableA).getStrategy().getClass().equals(FastProjectileStrategy.class)) {
-									gameScore.setGameScore(gameScore.getGameScore() + 2);
-									gameScore.notifyObservers();
-								}
-							} else if (renderableA.getClass().equals(Enemy.class)) {
-								if (((Enemy) renderableA).getProjectileStrategy().getClass().equals(SlowProjectileStrategy.class)){
-									gameScore.setGameScore(gameScore.getGameScore() + 3);
-									gameScore.notifyObservers();
-								} else if (((Enemy) renderableA).getProjectileStrategy().getClass().equals(FastProjectileStrategy.class)){
-									gameScore.setGameScore(gameScore.getGameScore() + 4);
-									gameScore.notifyObservers();
-								}
-							} else if (renderableA.getClass().equals(Player.class)){
-								//when player is dead, end game
-								System.out.println("Aliens Win");
-								System.out.println("Game Score: "+gameScore.getGameScore());
-								double minutes = (double) gameTime.getGameTime().toMinutes();
-								double seconds = (double) (gameTime.getGameTime().toSeconds()%60);
-
-								String formattedTime  = String.format("%02.0f:%02.0f", minutes, seconds);
-								System.out.println("Game Time: "+formattedTime);
-								Platform.exit();
-							}
-						}
+//						/**Gain Score Here**/
+//						if (renderableA.getHealth()<=0) {
+//							if (renderableA.getClass().equals(Player.class)){
+//								//when player is dead, end game
+//								System.out.println("Aliens Win");
+//								System.out.println("Game Score: "+gameScore.getGameScore());
+//								double minutes = (double) gameTime.getGameTime().toMinutes();
+//								double seconds = (double) (gameTime.getGameTime().toSeconds()%60);
+//
+//								String formattedTime  = String.format("%02.0f:%02.0f", minutes, seconds);
+//								System.out.println("Game Time: "+formattedTime);
+//								Platform.exit();
+//							}
+//						}
 					}
 				}
 			}
@@ -172,27 +142,8 @@ public class GameEngine {
 			}
 		}
 
-		/**record game time**/
-		gameTime.setTime(gameTime.getGameTime().add(new Duration(17)));
-		gameTime.notifyObservers();
 
 
-		int counter = 0;
-		for (Renderable ro : renderables){
-			if (ro.isAlive() && ro.getRenderableObjectName().equals("Enemy")){
-				counter++;
-			}
-		}
-		if (counter <=0){
-			System.out.println("Player Wins");
-			System.out.println("Game Score: "+gameScore.getGameScore());
-			double minutes = (double) gameTime.getGameTime().toMinutes();
-			double seconds = (double) (gameTime.getGameTime().toSeconds()%60);
-
-			String formattedTime  = String.format("%02.0f:%02.0f", minutes, seconds);
-			System.out.println("Game Time: "+formattedTime);
-			Platform.exit();
-		}
 	}
 
 	public List<Renderable> getRenderables(){
@@ -268,10 +219,4 @@ public class GameEngine {
 		return player;
 	}
 
-	public SystemStats getSystemStats(){return systemStats;}
-	public GameScore getGameScore(){return gameScore;}
-	public GameTime getGameTime(){return  gameTime;}
-
-	public int getNumberOfEnemy(){return numberOfEnemy;}
-	public void setNumberOfEnemy(int count){this.numberOfEnemy = count;}
 }

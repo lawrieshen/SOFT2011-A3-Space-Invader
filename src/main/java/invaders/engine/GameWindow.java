@@ -11,7 +11,6 @@ import invaders.entities.Player;
 import invaders.entities.SpaceBackground;
 import invaders.factory.EnemyProjectile;
 import invaders.factory.PlayerProjectile;
-import invaders.factory.Projectile;
 import invaders.gameobject.Bunker;
 import invaders.gameobject.Enemy;
 import invaders.gameobject.GameObject;
@@ -55,11 +54,11 @@ public class GameWindow implements Serializable, Observer {
     private Button undoButton;
     private MenuBar cheatMenuBar;
     /**Memento**/
-    private Map<String, Caretaker> caretakers= new HashMap();
+    private Map<String, Object> caretakers= new HashMap();
 
 
-    private int gameScoreV2 = 0;
-    private Duration gameTimeV2 = Duration.ZERO;
+    private int gameScore = 0;
+    private Duration gameTime = Duration.ZERO;
 
 	public GameWindow(GameEngine model){
         this.model = model;
@@ -70,15 +69,14 @@ public class GameWindow implements Serializable, Observer {
         caretakers.put("BunkerCaretaker", new BunkerCaretaker());
         caretakers.put("EnemyCaretaker", new EnemyCaretaker());
         caretakers.put("EnemyProjectileCaretaker", new EnemyProjectileCaretaker());
-        caretakers.put("GameScoreCaretaker", new GameScoreCaretaker());
-        caretakers.put("GameTimeCaretaker", new GameTimeCaretaker());
         caretakers.put("PlayerCaretaker", new PlayerCaretaker());
+        caretakers.put("SystemStatsCaretaker", new SystemStatsCaretaker());
 
         pane = new Pane();
         scene = new Scene(pane, width, height);
         this.background = new SpaceBackground(model, pane);
 
-        KeyboardInputHandler keyboardInputHandler = new KeyboardInputHandler(this.model, caretakers);
+        KeyboardInputHandler keyboardInputHandler = new KeyboardInputHandler(this);
 
         scene.setOnKeyPressed(keyboardInputHandler::handlePressed);
         scene.setOnKeyReleased(keyboardInputHandler::handleReleased);
@@ -164,9 +162,8 @@ public class GameWindow implements Serializable, Observer {
                 } else if (ro.getClass().equals(PlayerProjectile.class)) {
                     ro.takeDamage(1);
                 }
+                ((SystemStatsCaretaker) caretakers.get("SystemStatsCaretaker")).reloadState(this);
             }
-            ((GameScoreCaretaker) caretakers.get("GameScoreCaretaker")).reloadState(model.getGameScore());
-            ((GameTimeCaretaker) caretakers.get("GameTimeCaretaker")).reloadState(model.getGameTime());
 
             for (Renderable entity : renderablesToBeRemoved){
                 for (EntityView entityView : entityViews){
@@ -201,7 +198,7 @@ public class GameWindow implements Serializable, Observer {
         pane.getChildren().add(hbox);
 
 
-        //register observer to subject
+        // Observer - register observer to subject
         for (Renderable ro : model.getRenderables()){
             if (ro.getClass().equals(Enemy.class)){
                 ((Enemy) ro).attach(this);
@@ -220,7 +217,7 @@ public class GameWindow implements Serializable, Observer {
 
 
     private void draw(){
-        gameTimeV2 = gameTimeV2.add(Duration.millis(17));
+        gameTime = gameTime.add(Duration.millis(17));
 
         model.update();
 
@@ -304,16 +301,19 @@ public class GameWindow implements Serializable, Observer {
 
 
         /**Draw Duration of Game DYNAMICALLY**/
-        double minutes = (double) gameTimeV2.toMinutes();
-        double seconds = (double) (gameTimeV2.toSeconds()%60);
+        double minutes = (double) gameTime.toMinutes();
+        double seconds = (double) (gameTime.toSeconds()%60);
 
         String formattedTime  = String.format("Time: %02.0f:%02.0f", minutes, seconds);
         gameTimeLabel.setText(formattedTime);
 
         /**Draw Score Recorder DYNAMICALLY**/
 
-        String formattedScore = String.format("Score: %d", gameScoreV2);
+        String formattedScore = String.format("Score: %d", gameScore);
         gameScoreLabel.setText(formattedScore);
+
+        /**Check End Game Or Not**/
+        determineEndGame();
 
     }
 
@@ -325,16 +325,70 @@ public class GameWindow implements Serializable, Observer {
     public void update(Subject subject) {
         if (subject.getClass().equals(Enemy.class)){
             if (((Enemy) subject).getProjectileStrategy().getClass().equals(SlowProjectileStrategy.class)){
-                gameScoreV2 = gameScoreV2 + 3;
+                gameScore = gameScore + 3;
             } else if (((Enemy) subject).getProjectileStrategy().getClass().equals(FastProjectileStrategy.class)) {
-                gameScoreV2 = gameScoreV2 + 4;
+                gameScore = gameScore + 4;
             }
         } else if (subject.getClass().equals(EnemyProjectile.class)) {
             if (((EnemyProjectile) subject).getStrategy().getClass().equals(SlowProjectileStrategy.class)){
-                gameScoreV2 = gameScoreV2 + 1;
+                gameScore = gameScore + 1;
             } else if (((EnemyProjectile) subject).getStrategy().getClass().equals(FastProjectileStrategy.class)) {
-                gameScoreV2 = gameScoreV2 + 2;
+                gameScore = gameScore + 2;
             }
+        }
+    }
+
+    public SystemStatsMemento save(){
+        return new SystemStatsMemento(gameTime, gameScore);
+    }
+
+    public void restore(SystemStatsMemento systemStatsMemento){
+        this.gameTime = systemStatsMemento.getGameTime();
+        this.gameScore = systemStatsMemento.getGameScore();
+    }
+
+    public GameEngine getModel() {
+        return model;
+    }
+
+    public Map<String, Object> getCaretakers() {
+        return caretakers;
+    }
+
+    public void determineEndGame(){
+        //when all enemies are dead, end game
+        int counter = 0;
+		for (Renderable ro : model.getRenderables()){
+			if (ro.isAlive() && ro.getRenderableObjectName().equals("Enemy")){
+				counter++;
+			}
+		}
+		if (counter <=0){
+			System.out.println("Player Wins");
+			System.out.println("Game Score: " + gameScore);
+			double minutes = (double) gameTime.toMinutes();
+			double seconds = (double) (gameTime.toSeconds()%60);
+
+			String formattedTime  = String.format("%02.0f:%02.0f", minutes, seconds);
+			System.out.println("Game Time: "+formattedTime);
+			Platform.exit();
+		}
+        //when player is dead, end game
+        counter = 0;
+        for (Renderable ro: model.getRenderables()){
+            if (ro.isAlive() && ro.getRenderableObjectName().equals("Player")){
+                counter++;
+            }
+        }
+        if (counter <=0 ){
+			System.out.println("Aliens Win");
+			System.out.println("Game Score: " + gameScore);
+            double minutes = (double) gameTime.toMinutes();
+            double seconds = (double) (gameTime.toSeconds()%60);
+
+            String formattedTime  = String.format("%02.0f:%02.0f", minutes, seconds);
+            System.out.println("Game Time: "+formattedTime);
+            Platform.exit();
         }
     }
 }

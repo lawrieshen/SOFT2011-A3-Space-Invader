@@ -5,7 +5,7 @@ import invaders.factory.EnemyProjectile;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-public class EnemyProjectileCaretaker implements Caretaker{
+public class EnemyProjectileCaretaker {
 
     private final Deque<EnemyProjectileMemento> mementos = new ArrayDeque<>();
     public void saveState(EnemyProjectile enemyProjectile){
