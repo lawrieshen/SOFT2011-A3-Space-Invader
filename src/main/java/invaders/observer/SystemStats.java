@@ -22,6 +22,5 @@ public class SystemStats implements Observer{
     public void update() {
         time = gameTime.getGameTime();
         score = gameScore.getGameScore();
-        //System.out.println(time.toSeconds());
     }
 }
