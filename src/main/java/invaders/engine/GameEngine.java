@@ -7,17 +7,12 @@ import invaders.ConfigReader;
 import invaders.builder.BunkerBuilder;
 import invaders.builder.Director;
 import invaders.builder.EnemyBuilder;
-import invaders.factory.EnemyProjectile;
 import invaders.factory.Projectile;
 import invaders.gameobject.Bunker;
 import invaders.gameobject.Enemy;
 import invaders.gameobject.GameObject;
 import invaders.entities.Player;
 import invaders.rendering.Renderable;
-import invaders.strategy.FastProjectileStrategy;
-import invaders.strategy.SlowProjectileStrategy;
-import javafx.application.Platform;
-import javafx.util.Duration;
 import org.json.simple.JSONObject;
 
 /**
@@ -71,6 +66,7 @@ public class GameEngine {
 			gameObjects.add(enemy);
 			renderables.add(enemy);
 		}
+
 	}
 
 	/**
@@ -92,27 +88,11 @@ public class GameEngine {
 
 				if((renderableA.getRenderableObjectName().equals("Enemy") && renderableB.getRenderableObjectName().equals("EnemyProjectile"))
 						||(renderableA.getRenderableObjectName().equals("EnemyProjectile") && renderableB.getRenderableObjectName().equals("Enemy"))||
-						(renderableA.getRenderableObjectName().equals("EnemyProjectile") && renderableB.getRenderableObjectName().equals("EnemyProjectile"))||
-						(renderableA.getRenderableObjectName().equals("Enemy") && renderableB.getRenderableObjectName().equals("Enemy"))){
-					//do nothing
+						(renderableA.getRenderableObjectName().equals("EnemyProjectile") && renderableB.getRenderableObjectName().equals("EnemyProjectile"))){
 				}else{
 					if(renderableA.isColliding(renderableB) && (renderableA.getHealth()>0 && renderableB.getHealth()>0)) {
 						renderableA.takeDamage(1);
 						renderableB.takeDamage(1);
-//						/**Gain Score Here**/
-//						if (renderableA.getHealth()<=0) {
-//							if (renderableA.getClass().equals(Player.class)){
-//								//when player is dead, end game
-//								System.out.println("Aliens Win");
-//								System.out.println("Game Score: "+gameScore.getGameScore());
-//								double minutes = (double) gameTime.getGameTime().toMinutes();
-//								double seconds = (double) (gameTime.getGameTime().toSeconds()%60);
-//
-//								String formattedTime  = String.format("%02.0f:%02.0f", minutes, seconds);
-//								System.out.println("Game Time: "+formattedTime);
-//								Platform.exit();
-//							}
-//						}
 					}
 				}
 			}
@@ -141,8 +121,6 @@ public class GameEngine {
 				ro.getPosition().setY(offset);
 			}
 		}
-
-
 
 	}
 
@@ -191,7 +169,6 @@ public class GameEngine {
 			gameObjects.add(projectile);
 			renderables.add(projectile);
 			timer=0;
-
 			return true;
 		}
 		return false;
@@ -218,5 +195,4 @@ public class GameEngine {
 	public Player getPlayer() {
 		return player;
 	}
-
 }

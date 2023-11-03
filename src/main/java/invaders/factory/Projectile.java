@@ -1,6 +1,7 @@
 package invaders.factory;
 
 import invaders.gameobject.GameObject;
+import invaders.physics.Collider;
 import invaders.physics.Vector2D;
 import invaders.rendering.Renderable;
 import javafx.scene.image.Image;
@@ -58,11 +59,4 @@ public abstract class Projectile implements Renderable, GameObject {
         return this.lives>0;
     }
 
-    public void setPosition(Vector2D position) {
-        this.position = position;
-    }
-
-    public void setLives(int lives) {
-        this.lives = lives;
-    }
 }

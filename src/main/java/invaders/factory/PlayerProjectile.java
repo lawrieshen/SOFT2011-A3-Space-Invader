@@ -22,11 +22,8 @@ public class PlayerProjectile extends Projectile {
             this.takeDamage(1);
         }
     }
-
     @Override
     public String getRenderableObjectName() {
         return "PlayerProjectile";
     }
-
-
 }

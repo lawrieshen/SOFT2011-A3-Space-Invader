@@ -1,23 +1,24 @@
 package invaders.entities;
 
+import invaders.factory.PlayerProjectile;
 import invaders.factory.PlayerProjectileFactory;
 import invaders.factory.Projectile;
 import invaders.factory.ProjectileFactory;
-import invaders.memento.PlayerMemento;
+import invaders.physics.Collider;
 import invaders.physics.Moveable;
 import invaders.physics.Vector2D;
+import invaders.rendering.Animator;
 import invaders.rendering.Renderable;
 
 import invaders.strategy.NormalProjectileStrategy;
-import invaders.utils.DeepCopy;
 import javafx.scene.image.Image;
 import org.json.simple.JSONObject;
 
 import java.io.File;
 
-public class Player implements Moveable, Renderable, Cloneable{
+public class Player implements Moveable, Renderable {
 
-    private Vector2D position;
+    private final Vector2D position;
     private double health;
     private double velocity;
 
@@ -107,15 +108,4 @@ public class Player implements Moveable, Renderable, Cloneable{
         return "Player";
     }
 
-    public PlayerMemento save(){
-        return new PlayerMemento(
-                DeepCopy.deepCopy(position, Vector2D.class),
-                this.getHealth()
-        );
-    }
-
-    public void restore(PlayerMemento playerMemento){
-        this.position = playerMemento.getPosition();
-        this.health = playerMemento.getHealth();
-    }
 }

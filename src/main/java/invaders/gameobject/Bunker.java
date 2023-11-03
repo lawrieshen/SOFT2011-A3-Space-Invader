@@ -1,22 +1,19 @@
 package invaders.gameobject;
 
 import invaders.engine.GameEngine;
-import invaders.memento.BunkerMemento;
+import invaders.physics.Collider;
 import invaders.physics.Vector2D;
 import invaders.rendering.Renderable;
 import invaders.state.BunkerState;
 import invaders.state.GreenState;
-import invaders.utils.DeepCopy;
 import javafx.scene.image.Image;
 
-import java.io.Serializable;
-
-public class Bunker implements GameObject, Renderable, Serializable {
+public class Bunker implements GameObject, Renderable {
     private Vector2D position;
     private double width;
     private double height;
     private int lives;
-    private transient Image image;
+    private Image image;
     private BunkerState state = new GreenState(this);
 
 
@@ -60,11 +57,6 @@ public class Bunker implements GameObject, Renderable, Serializable {
 	public double getHealth(){
 	    return this.lives;
 	}
-
-    @Override
-    public boolean isColliding(Renderable col) {
-        return Renderable.super.isColliding(col);
-    }
 
     @Override
     public String getRenderableObjectName() {
@@ -114,17 +106,4 @@ public class Bunker implements GameObject, Renderable, Serializable {
     public void setState(BunkerState state) {
         this.state = state;
     }
-
-    public BunkerMemento save(){
-        return new BunkerMemento(
-                getHealth(),
-                DeepCopy.deepCopy(getState(), BunkerState.class)
-        );
-    }
-
-    public void restore(BunkerMemento memento){
-        setLives((int) memento.getHealth());
-        setState(memento.getBunkerState());
-    }
-
 }
